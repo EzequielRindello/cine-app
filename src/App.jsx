@@ -1,8 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import "./App.css";
 
 // common components
-import Header from "./components/common/Header";
 import Navigation from "./components/common/Navigation";
 import Footer from "./components/common/Footer";
 
@@ -20,7 +18,6 @@ function App() {
   return (
     <Router>
       <div className="app">
-        <Header />
         <Navigation />
 
         <main className="main-content">

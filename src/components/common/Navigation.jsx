@@ -1,44 +1,35 @@
+import { Container, Nav, Navbar } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
+import reactLogo from "/public/react-logo.png";
 
 const Navigation = () => {
   return (
-    <nav className="navigation">
-      <div className="nav-container">
-        <ul className="nav-list">
-          <li className="nav-item">
-            <NavLink
-              to="/"
-              className={({ isActive }) =>
-                isActive ? "nav-link active" : "nav-link"
-              }
-              end
-            >
+    <Navbar className="main-navbar" expand="md">
+      <Container>
+        <Navbar.Brand className="nav-title">
+          <img
+            src={reactLogo}
+            alt="React Logo"
+            className="react-logo"
+          />
+          MOVIEapp
+        </Navbar.Brand>
+        <Navbar.Toggle aria-controls="main-navbar-nav" />
+        <Navbar.Collapse id="main-navbar-nav">
+          <Nav className="ms-auto nav-links">
+            <Nav.Link as={NavLink} to="/" end>
               Home
-            </NavLink>
-          </li>
-          <li className="nav-item">
-            <NavLink
-              to="/functions"
-              className={({ isActive }) =>
-                isActive ? "nav-link active" : "nav-link"
-              }
-            >
+            </Nav.Link>
+            <Nav.Link as={NavLink} to="/functions">
               Function
-            </NavLink>
-          </li>
-          <li className="nav-item">
-            <NavLink
-              to="/movies"
-              className={({ isActive }) =>
-                isActive ? "nav-link active" : "nav-link"
-              }
-            >
+            </Nav.Link>
+            <Nav.Link as={NavLink} to="/movies">
               Movies
-            </NavLink>
-          </li>
-        </ul>
-      </div>
-    </nav>
+            </Nav.Link>
+          </Nav>
+        </Navbar.Collapse>
+      </Container>
+    </Navbar>
   );
 };
 
