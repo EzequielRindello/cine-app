@@ -1,17 +1,20 @@
 import { Container, Nav, Navbar } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 import reactLogo from "/public/react-logo.png";
 
 const Navigation = () => {
+  const navigate = useNavigate();
+
+  const hadleLogoClick = () => {
+    navigate("/");
+  };
+
   return (
     <Navbar className="main-navbar" expand="md">
       <Container>
-        <Navbar.Brand className="nav-title">
-          <img
-            src={reactLogo}
-            alt="React Logo"
-            className="react-logo"
-          />
+        <Navbar.Brand className="nav-title" onClick={hadleLogoClick}>
+          <img src={reactLogo} alt="React Logo" className="react-logo" />
           MOVIEapp
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="main-navbar-nav" />

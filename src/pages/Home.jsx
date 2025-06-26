@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import functionService from "../services/functionService.js";
 import LoadingSpinner from "../components/common/LoadingSpinner.jsx";
 
@@ -6,6 +7,7 @@ const Home = () => {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const loadStats = async () => {
@@ -40,8 +42,24 @@ const Home = () => {
     <div className="container mt-5 mb-5">
       <div className="row">
         <div className="col-12 text-center mb-4">
-          <h1 className="display-4">Welcome</h1>
-          <p className="lead">System Statistics</p>
+          <h1 className="display-3">Welcome back!</h1>
+          <p className="fs-6">
+            System Statistics ·{" "}
+            <strong
+              style={{
+                cursor: "pointer",
+                textDecoration: "none",
+                fontStyle: "italic",
+              }}
+              onClick={() => navigate("/movies")}
+              onMouseEnter={(e) =>
+                (e.target.style.textDecoration = "underline")
+              }
+              onMouseLeave={(e) => (e.target.style.textDecoration = "none")}
+            >
+              View movies
+            </strong>
+          </p>
         </div>
       </div>
 
@@ -97,15 +115,28 @@ const Home = () => {
               </h5>
             </div>
             <div className="card-body">
-              <div className="row">
-                <div className="col-md-4">
+              <div className="row row-cols-1 row-cols-md-2 g-4">
+                <div>
                   <p>
                     <strong>System Limits:</strong>
                   </p>
                   <ul className="list-unstyled">
-                    <li>• International films: maximum 8 screenings</li>
+                    <li>• International films: maximum 8 functions</li>
                     <li>• National films: unlimited</li>
-                    <li>• Directors: max. 10 performances per day</li>
+                    <li>• Directors: max. 10 functions per day</li>
+                  </ul>
+                </div>
+                <div>
+                  <p>
+                    <strong>System Workflow:</strong>
+                  </p>
+                  <ul className="list-unstyled">
+                    <li>• Movies: see all available movies</li>
+                    <li>
+                      • Movies details: see details for a specific movie and
+                      create a new function
+                    </li>
+                    <li>• Functions: search and manage existing funtions</li>
                   </ul>
                 </div>
               </div>
