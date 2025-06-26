@@ -1,5 +1,99 @@
-function MovieDetails() {
-  return <p>test</p>;
-}
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import functionService from "../../services/functionService";
+import { Button, Card, Row, Col } from "react-bootstrap";
+import AddFunctionModal from "../modals/AddFunctionModal";
+import { useNavigate } from "react-router-dom";
+
+const MovieDetails = () => {
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const [movieData, setMovieData] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+
+  useEffect(() => {
+    const fetchDetails = async () => {
+      try {
+        const res = await functionService.getMovieFunctions(id);
+        setMovieData(res.movie);
+      } catch (err) {
+        console.error("Error loading movie:", err.message);
+      }
+    };
+    fetchDetails();
+  }, [id]);
+
+  const handleGoBack = () => {
+    navigate(`/movies`);
+  };
+
+  if (!movieData) {
+    return (
+      <div className="d-flex justify-content-center mt-5">
+        <p>An error ocurred. Please try again later.</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="container mt-5">
+      <Card style={{ minHeight: "300px" }}>
+        <Row className="g-0">
+          <Col md={4}>
+            <Card.Img
+              src={movieData.poster}
+              alt={movieData.title}
+              style={{
+                height: "100%",
+                width: "100%",
+                objectFit: "cover",
+                borderRadius: "0.375rem 0 0 0.375rem",
+              }}
+            />
+          </Col>
+
+          <Col md={8}>
+            <Card.Body className="d-flex flex-column justify-content-between h-100">
+              <div>
+                <h1 className="display-4">{movieData.title}</h1>
+
+                <Card.Text className="mt-4 fs-5">
+                  <p>
+                    <strong>Type:</strong> {movieData.type}
+                  </p>
+                  <p>
+                    <strong>Director:</strong> {movieData.directorName}
+                  </p>
+                  <p>
+                    <strong>Description:</strong> {movieData.description}
+                  </p>
+                </Card.Text>
+              </div>
+
+              <div className="mt-4">
+                <Button
+                  variant="secondary"
+                  className="me-2"
+                  onClick={handleGoBack}
+                >
+                  Go Back
+                </Button>
+                <Button variant="danger" onClick={() => setShowModal(true)}>
+                  Add Function
+                </Button>
+              </div>
+            </Card.Body>
+          </Col>
+        </Row>
+      </Card>
+
+      <AddFunctionModal
+        show={showModal}
+        handleClose={() => setShowModal(false)}
+        directorName={movieData.directorName}
+      />
+    </div>
+  );
+};
 
 export default MovieDetails;

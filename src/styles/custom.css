@@ -71,7 +71,23 @@ body {
 }
 .card-header {
   background-color: #12100d;
+  color: #fff;
 }
+
+/* movies styles */
+.modal-add-function{
+  background-color:#23211e;
+  border-radius: 0.5rem;
+}
+.modal-header {
+  background-color: #12100d;
+  color: #fff;
+}
+.modal-body, .modal-footer {
+  color: #fff;
+  background-color: #23211e;
+}
+
 
 /* footer styles*/
 .main-footer {

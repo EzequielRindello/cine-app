@@ -24,7 +24,8 @@ export const movies = [
     directorId: 1,
     director: "Christopher Nolan",
     type: "international",
-    poster: "",
+    poster:
+      "https://http2.mlstatic.com/D_NQ_NP_2X_860530-MLA81194764967_122024-F.webp",
     description:
       "A thief who steals corporate secrets through dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O.",
   },
@@ -34,7 +35,7 @@ export const movies = [
     directorId: 2,
     director: "Quentin Tarantino",
     type: "international",
-    poster: "",
+    poster: "https://m.media-amazon.com/images/I/718LfFW+tIL._AC_SL1280_.jpg",
     description:
       "The lives of two mob hitmen, a boxer, a gangster and his wife intertwine in four tales of violence and redemption.",
   },
@@ -44,7 +45,8 @@ export const movies = [
     directorId: 3,
     director: "Martin Scorsese",
     type: "international",
-    poster: "",
+    poster:
+      "https://www.originalfilmart.com/cdn/shop/products/departed_2006_original_film_art_921946c9-5eaa-43a5-9425-2e13cb2de4ac_5000x.jpg?v=1679940744g",
     description:
       "An undercover cop and a police informant play a deadly game of cat and mouse.",
   },
@@ -54,7 +56,8 @@ export const movies = [
     directorId: 4,
     director: "Denis Villeneuve",
     type: "international",
-    poster: "",
+    poster:
+      "https://postercity.com.ar/wp-content/uploads/2017/10/blade-runner-2049-poster-main-scaled-scaled.jpg",
     description:
       "Young Blade Runner K's discovery of a long-buried secret leads him to track down former Blade Runner Rick Deckard.",
   },
@@ -64,7 +67,8 @@ export const movies = [
     directorId: 9,
     director: "Juan José Campanella",
     type: "national",
-    poster: "",
+    poster:
+      "https://haddockfilms.com/wp-content/uploads/2019/04/El-secreto-poster.jpg",
     description:
       "A retired legal counselor writes a novel hoping to find closure for one of his past unresolved homicide cases.",
   },
@@ -74,7 +78,8 @@ export const movies = [
     directorId: 8,
     director: "Luis Puenzo",
     type: "national",
-    poster: "",
+    poster:
+      "https://m.media-amazon.com/images/M/MV5BOWI5NDBlYzUtYzE4ZS00MmI2LTgzOGEtNTVjNzZlMDZmMDcyXkEyXkFqcGc@._V1_.jpg",
     description:
       "During the final months of Argentinian military dictatorship, a high school teacher sets out to find out who the mother of her adopted daughter is.",
   },
@@ -84,7 +89,8 @@ export const movies = [
     directorId: 10,
     director: "Pablo Trapero",
     type: "national",
-    poster: "",
+    poster:
+      "https://es.web.img2.acsta.net/r_1920_1080/medias/nmedia/18/78/18/74/19632325.jpg",
     description:
       "A ambulance-chasing lawyer gets romantically involved with an ambulance paramedic and becomes entangled in a web of corruption.",
   },
@@ -94,7 +100,8 @@ export const movies = [
     directorId: 12,
     director: "Damián Szifron",
     type: "national",
-    poster: "",
+    poster:
+      "https://contarte.com.ar/wp-content/uploads/2024/08/Relatos.webp",
     description:
       "Six short stories that explore the extremities of human behavior involving people in distress.",
   },
