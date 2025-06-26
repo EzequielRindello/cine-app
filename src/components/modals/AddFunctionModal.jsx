@@ -11,6 +11,12 @@ const AddFunctionModal = ({ show, handleClose, directorName }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    // add logic to create a new function
+    // make sure to validate the inputs before proceeding
+    // use services to coroborate with exptions:
+    // (International films: maximum 8 screenings)
+    // National films: unlimited
+    // Directors: max. 10 performances per day
     setShowSuccessModal(true);
   };
 
