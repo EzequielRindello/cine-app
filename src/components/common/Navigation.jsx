@@ -24,7 +24,7 @@ const Navigation = () => {
               Movies
             </Nav.Link>
             <Nav.Link as={NavLink} to="/functions">
-              Function
+              Functions
             </Nav.Link>
           </Nav>
         </Navbar.Collapse>

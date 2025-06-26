@@ -11,7 +11,6 @@ import Movies from "./pages/Movies";
 import NotFound from "./pages/NotFound";
 
 // specific components
-import FunctionDetails from "./components/functions/FunctionDetails";
 import MovieDetails from "./components/movies/MovieDetails";
 
 function App() {
@@ -26,7 +25,6 @@ function App() {
             <Route path="/" element={<Home />} />
 
             <Route path="/functions" element={<Functions />} />
-            <Route path="/functions/:id" element={<FunctionDetails />} />
 
             <Route path="/movies" element={<Movies />} />
             <Route path="/movies/:id" element={<MovieDetails />} />

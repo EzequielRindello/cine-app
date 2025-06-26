@@ -1,11 +1,47 @@
-import FunctionList from '../components/functions/FunctionList';
+import { useEffect, useState } from "react";
+import { Container, Form, Button } from "react-bootstrap";
+import functionService from "../services/functionService";
+import FunctionList from "../components/functions/FunctionList";
 
 const Functions = () => {
+  const [filter, setFilter] = useState("");
+  const [functions, setFunctions] = useState([]);
+  const [movies, setMovies] = useState([]);
+
+  useEffect(() => {
+    const fetchAll = async () => {
+      const moviesData = await functionService.getMovies();
+      const allFunctions = [];
+
+      for (const movie of moviesData) {
+        const { functions } = await functionService.getMovieFunctions(movie.id);
+        functions.forEach((f) => allFunctions.push({ ...f, movie }));
+      }
+
+      setMovies(moviesData);
+      setFunctions(allFunctions);
+    };
+
+    fetchAll();
+  }, []);
+
+  const filtered = functions.filter((f) =>
+    f.movie.directorName.toLowerCase().includes(filter.toLowerCase())
+  );
+
   return (
-    <div className="functions-page d-flex justify-content-center align-items-center mt-5">
-      <h1>Functions</h1>
-      <FunctionList />
-    </div>
+    <Container className="mt-5 mb-5">
+      <h1 className="mb-4">All Functions</h1>
+      <Form className="mb-3">
+        <Form.Control
+          type="text"
+          placeholder="Filter by director name..."
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+        />
+      </Form>
+      <FunctionList functions={filtered} />
+    </Container>
   );
 };
 
