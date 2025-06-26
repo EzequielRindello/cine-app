@@ -37,7 +37,7 @@ const Home = () => {
   }
 
   return (
-    <div className="container mt-5">
+    <div className="container mt-5 mb-5">
       <div className="row">
         <div className="col-12 text-center mb-4">
           <h1 className="display-4">Welcome</h1>

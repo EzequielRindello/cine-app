@@ -9,6 +9,11 @@ body {
   background-color: #12100d;
   color: #fff;
 }
+
+.main-content {
+  flex: 1;
+}
+
 /* header styles */
 .main-navbar {
   background-color: #12100d;
@@ -56,28 +61,28 @@ body {
 }
 
 /* home styles */
-.stats-card i {
+.card {
   color: #fff;
+  background-color: #23211e;
 }
 .stats-card h2 {
   font-weight: bold;
   color: #dd0000;
 }
-.additional-info-card .card-header {
-  background-color: #23211E;
-  color: white;
+.card-header {
+  background-color: #12100d;
 }
-
 
 /* footer styles*/
 .main-footer {
   background-color: #12100d;
   color: #f7f6f5;
-  position: fixed;
+  position: relative;
   bottom: 0;
   width: 100%;
   padding: 1rem 0;
   text-align: center;
   z-index: 1000;
   border-top: 1px solid rgba(255, 255, 255, 0.12);
+  margin-top: auto;
 }
