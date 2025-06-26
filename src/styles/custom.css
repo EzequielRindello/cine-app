@@ -2,6 +2,13 @@ body {
   font-family: "Work Sans", sans-serif;
 }
 
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #12100d;
+  color: #fff;
+}
 /* header styles */
 .main-navbar {
   background-color: #12100d;
@@ -47,6 +54,20 @@ body {
 .navbar-toggler {
   border-color: #12100d;
 }
+
+/* home styles */
+.stats-card i {
+  color: #fff;
+}
+.stats-card h2 {
+  font-weight: bold;
+  color: #dd0000;
+}
+.additional-info-card .card-header {
+  background-color: #23211E;
+  color: white;
+}
+
 
 /* footer styles*/
 .main-footer {

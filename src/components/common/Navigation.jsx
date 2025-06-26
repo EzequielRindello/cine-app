@@ -20,11 +20,11 @@ const Navigation = () => {
             <Nav.Link as={NavLink} to="/" end>
               Home
             </Nav.Link>
-            <Nav.Link as={NavLink} to="/functions">
-              Function
-            </Nav.Link>
             <Nav.Link as={NavLink} to="/movies">
               Movies
+            </Nav.Link>
+            <Nav.Link as={NavLink} to="/functions">
+              Function
             </Nav.Link>
           </Nav>
         </Navbar.Collapse>
