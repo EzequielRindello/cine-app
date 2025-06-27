@@ -1,7 +1,7 @@
 import { Container, Nav, Navbar } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { NavLink } from "react-router-dom";
-import reactLogo from "/public/react-logo.png";
+import reactLogo from "/react-logo.png";
 
 const Navigation = () => {
   const navigate = useNavigate();
