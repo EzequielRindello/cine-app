@@ -9,6 +9,7 @@ const MovieDetails = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [movieData, setMovieData] = useState(null);
+  const [functionsData, setFunctionsData] = useState([]);
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
@@ -21,6 +22,18 @@ const MovieDetails = () => {
       }
     };
     fetchDetails();
+  }, [id]);
+
+  useEffect(() => {
+    const fetchFunctions = async () => {
+      try {
+        const res = await functionService.getMovieFunctions(id);
+        setFunctionsData(res.functions);
+      } catch (err) {
+        console.error("Error loading functions:", err.message);
+      }
+    };
+    fetchFunctions();
   }, [id]);
 
   const handleGoBack = () => {
@@ -67,6 +80,19 @@ const MovieDetails = () => {
                   <p>
                     <strong>Description:</strong> {movieData.description}
                   </p>
+                  <p>
+                    <strong>Fuctions created:</strong>
+                  </p>
+                  <ul>
+                    {functionsData.map((func) => (
+                      <li key={func.id}>
+                        {func.date} at {func.time} - ${func.price}
+                      </li>
+                    ))}
+                    {functionsData.length === 0 && (
+                      <p className="fs-6">No functions scheduled yet.</p>
+                    )}
+                  </ul>
                 </Card.Text>
               </div>
 
