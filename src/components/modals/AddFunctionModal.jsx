@@ -1,5 +1,5 @@
-import { Modal, Button, Form } from "react-bootstrap";
 import { useState } from "react";
+import { Button, Form, Modal } from "react-bootstrap";
 import SuccessModal from "./SuccessModal";
 
 const AddFunctionModal = ({ show, handleClose, directorName }) => {

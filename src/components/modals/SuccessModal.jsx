@@ -1,4 +1,4 @@
-import { Modal, Button } from "react-bootstrap";
+import { Button, Modal } from "react-bootstrap";
 
 const SuccessModal = ({ show, handleClose }) => (
   <Modal className="modal-success" show={show} onHide={handleClose} centered>

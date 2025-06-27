@@ -1,5 +1,5 @@
-import { Modal, Button, Form } from "react-bootstrap";
 import { useState } from "react";
+import { Button, Form, Modal } from "react-bootstrap";
 
 const EditFunctionModal = ({ show, handleClose, func }) => {
   const [date, setDate] = useState(func.date);

@@ -1,4 +1,4 @@
-import { Card, Button } from "react-bootstrap";
+import { Button, Card } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
 function MovieCard({ movie }) {

@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Button, Card, Col, Row } from "react-bootstrap";
+import { useNavigate, useParams } from "react-router-dom";
 import functionService from "../../services/functionService";
-import { Button, Card, Row, Col } from "react-bootstrap";
-import AddFunctionModal from "../modals/AddFunctionModal";
-import { useNavigate } from "react-router-dom";
 import LoadingSpinner from "../common/LoadingSpinner";
+import AddFunctionModal from "../modals/AddFunctionModal";
 
 const MovieDetails = () => {
   const navigate = useNavigate();

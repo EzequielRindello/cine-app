@@ -1,5 +1,5 @@
-import { Card, Button } from "react-bootstrap";
 import { useState } from "react";
+import { Button, Card } from "react-bootstrap";
 import EditFunctionModal from "../modals/EditFunctionModal";
 
 const FunctionCard = ({ func }) => {

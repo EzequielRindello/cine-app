@@ -1,6 +1,6 @@
-import { Row, Col } from "react-bootstrap";
-import FunctionCard from "./FunctionCard";
+import { Col, Row } from "react-bootstrap";
 import LoadingSpinner from "../common/LoadingSpinner";
+import FunctionCard from "./FunctionCard";
 
 const FunctionList = ({ functions }) => {
   if (functions.length === 0) {

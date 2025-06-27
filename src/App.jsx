@@ -1,12 +1,12 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 
 // common components
-import Navigation from "./components/common/Navigation";
 import Footer from "./components/common/Footer";
+import Navigation from "./components/common/Navigation";
 
 // pages 
-import Home from "./pages/Home";
 import Functions from "./pages/Functions";
+import Home from "./pages/Home";
 import Movies from "./pages/Movies";
 import NotFound from "./pages/NotFound";
 
