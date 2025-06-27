@@ -74,20 +74,30 @@ body {
   color: #fff;
 }
 
-/* movies styles */
-.modal-add-function{
-  background-color:#23211e;
-  border-radius: 0.5rem;
+/* modal styles */
+.modal-edit-function,
+.modal-add-function,
+.modal-error,
+.modal-success {
+  border-radius: 0.5rem !important;
+  outline: solid 1px #23211e !important;
+}
+.modal-add-function {
+  background-color: #23211e;
 }
 .modal-header {
   background-color: #12100d;
   color: #fff;
+  border-radius: 0%;
 }
-.modal-body, .modal-footer {
+.modal-body,
+.modal-footer {
   color: #fff;
   background-color: #23211e;
 }
-
+.edit-modal-button {
+  background-color: #29cc6a;
+}
 
 /* footer styles*/
 .main-footer {

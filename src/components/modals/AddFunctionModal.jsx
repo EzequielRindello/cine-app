@@ -77,7 +77,7 @@ const AddFunctionModal = ({ show, handleClose, directorName }) => {
             <Button variant="secondary" onClick={handleClose}>
               Cancel
             </Button>
-            <Button variant="danger" type="submit">
+            <Button variant="success" type="submit">
               Add
             </Button>
           </Modal.Footer>

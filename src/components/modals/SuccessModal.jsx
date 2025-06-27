@@ -1,7 +1,7 @@
 import { Modal, Button } from "react-bootstrap";
 
 const SuccessModal = ({ show, handleClose }) => (
-  <Modal show={show} onHide={handleClose} centered>
+  <Modal className="modal-success" show={show} onHide={handleClose} centered>
     <Modal.Header closeButton closeVariant="white">
       <Modal.Title>Success</Modal.Title>
     </Modal.Header>
@@ -9,7 +9,7 @@ const SuccessModal = ({ show, handleClose }) => (
       The function was added successfully.
       <br />
       <br />
-      <Button variant="danger" onClick={handleClose}>
+      <Button variant="success" onClick={handleClose}>
         OK
       </Button>
     </Modal.Body>

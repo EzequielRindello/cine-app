@@ -5,7 +5,7 @@ const ErrorModal = ({
   onClose,
   message = "An error occurred. Please try again.",
 }) => (
-  <Modal show={show} onHide={onClose} centered>
+  <Modal className="modal-error" show={show} onHide={onClose} centered>
     <Modal.Header closeButton>
       <Modal.Title className="text-danger">Error</Modal.Title>
     </Modal.Header>

@@ -73,7 +73,7 @@ const EditFunctionModal = ({ show, handleClose, func }) => {
           <Button variant="danger" onClick={handleDelete}>
             Delete
           </Button>
-          <Button variant="primary" type="submit">
+          <Button className="edit-modal-button" variant="success" type="submit">
             Save Changes
           </Button>
         </Modal.Footer>
