@@ -1,9 +1,14 @@
 import MovieCard from "./MovieCard";
 import { Row, Col } from "react-bootstrap";
+import LoadingSpinner from "../common/LoadingSpinner";
 
 function MovieList({ movies }) {
-  if (movies.length === 0) {
-    return <p>No movies found.</p>;
+  if (!movies || movies.length === 0) {
+    return (
+      <div>
+        <LoadingSpinner />
+      </div>
+    );
   }
 
   return (

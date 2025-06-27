@@ -18,7 +18,7 @@ const FunctionCard = ({ func }) => {
       <Card>
         <Card.Body>
           <Card.Title>{func.movie.title}</Card.Title>
-          <Card.Subtitle className="mb-2">
+          <Card.Subtitle className="mb-2 mt-2">
             {func.movie.directorName} - {func.date} {func.time}
           </Card.Subtitle>
           <Card.Text>Price: ${func.price}</Card.Text>

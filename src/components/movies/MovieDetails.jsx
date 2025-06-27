@@ -4,6 +4,7 @@ import functionService from "../../services/functionService";
 import { Button, Card, Row, Col } from "react-bootstrap";
 import AddFunctionModal from "../modals/AddFunctionModal";
 import { useNavigate } from "react-router-dom";
+import LoadingSpinner from "../common/LoadingSpinner";
 
 const MovieDetails = () => {
   const navigate = useNavigate();
@@ -43,7 +44,7 @@ const MovieDetails = () => {
   if (!movieData) {
     return (
       <div className="d-flex justify-content-center mt-5">
-        <p>An error ocurred. Please try again later.</p>
+        <LoadingSpinner />
       </div>
     );
   }
