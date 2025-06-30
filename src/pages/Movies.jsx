@@ -15,6 +15,10 @@ const Movies = () => {
     fetchMovies();
   }, []);
 
+  const handleFilterChange = (e) => {
+    setFilter(e.target.value);
+  };
+
   const filteredMovies = movies.filter((movie) =>
     movie.title.toLowerCase().includes(filter.toLowerCase())
   );
@@ -27,7 +31,7 @@ const Movies = () => {
           type="text"
           placeholder="Search by movie name..."
           value={filter}
-          onChange={(e) => setFilter(e.target.value)}
+          onChange={handleFilterChange}
         />
       </Form>
       <MovieList movies={filteredMovies} />

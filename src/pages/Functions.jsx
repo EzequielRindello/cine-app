@@ -23,6 +23,10 @@ const Functions = () => {
     fetchAll();
   }, []);
 
+  const handleFilterChange = (e) => {
+    setFilter(e.target.value);
+  };
+
   const filtered = functions.filter((f) =>
     f.movie.directorName.toLowerCase().includes(filter.toLowerCase())
   );
@@ -35,7 +39,7 @@ const Functions = () => {
           type="text"
           placeholder="Filter by director name..."
           value={filter}
-          onChange={(e) => setFilter(e.target.value)}
+          onChange={handleFilterChange}
         />
       </Form>
       <FunctionList functions={filtered} />

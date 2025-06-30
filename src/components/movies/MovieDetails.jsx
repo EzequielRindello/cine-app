@@ -40,6 +40,14 @@ const MovieDetails = () => {
     navigate(`/movies`);
   };
 
+  const handleAddFunction = () => {
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+
   if (!movieData) {
     return (
       <div className="d-flex justify-content-center mt-5">
@@ -97,7 +105,7 @@ const MovieDetails = () => {
                 >
                   Go Back
                 </Button>
-                <Button variant="danger" onClick={() => setShowModal(true)}>
+                <Button variant="danger" onClick={handleAddFunction}>
                   Add Function
                 </Button>
               </div>
@@ -107,7 +115,7 @@ const MovieDetails = () => {
       </Card>
       <AddFunctionModal
         show={showModal}
-        handleClose={() => setShowModal(false)}
+        handleClose={handleCloseModal}
         directorName={movieData.directorName}
       />
     </div>
