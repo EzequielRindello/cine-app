@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { Button, Card, Col, Row } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
+import { Button, Card, Col, Row } from "react-bootstrap";
 import functionService from "../../services/functionService";
 import LoadingSpinner from "../common/LoadingSpinner";
 import AddFunctionModal from "../modals/AddFunctionModal";

@@ -1,4 +1,4 @@
-import { movies, directors, functions, getStats } from "../data/data";
+import { directors, functions, getStats, movies } from "../data/data";
 
 // simulate a delay for API calls
 const delay = (ms = 500) => new Promise((resolve) => setTimeout(resolve, ms));

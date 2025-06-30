@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import LoadingSpinner from "../components/common/LoadingSpinner.jsx";
 import functionService from "../services/functionService.js";
+import LoadingSpinner from "../components/common/LoadingSpinner.jsx";
 
 const Home = () => {
   const [stats, setStats] = useState(null);

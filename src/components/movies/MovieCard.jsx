@@ -1,5 +1,5 @@
-import { Button, Card } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { Button, Card } from "react-bootstrap";
 
 function MovieCard({ movie }) {
   const navigate = useNavigate();

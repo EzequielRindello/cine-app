@@ -1,17 +1,12 @@
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 
-// common components
 import Footer from "./components/common/Footer";
 import Navigation from "./components/common/Navigation";
-
-// pages 
+import MovieDetails from "./components/movies/MovieDetails";
 import Functions from "./pages/Functions";
 import Home from "./pages/Home";
 import Movies from "./pages/Movies";
 import NotFound from "./pages/NotFound";
-
-// specific components
-import MovieDetails from "./components/movies/MovieDetails";
 
 function App() {
   return (
@@ -21,7 +16,6 @@ function App() {
 
         <main className="main-content">
           <Routes>
-
             <Route path="/" element={<Home />} />
 
             <Route path="/functions" element={<Functions />} />
@@ -32,7 +26,7 @@ function App() {
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
-        
+
         <Footer />
       </div>
     </Router>

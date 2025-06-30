@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Container, Form } from "react-bootstrap";
-import MovieList from "../components/movies/MovieList";
 import functionService from "../services/functionService";
+import MovieList from "../components/movies/MovieList";
 
 const Movies = () => {
   const [filter, setFilter] = useState("");

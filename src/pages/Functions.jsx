@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Container, Form } from "react-bootstrap";
-import FunctionList from "../components/functions/FunctionList";
 import functionService from "../services/functionService";
+import FunctionList from "../components/functions/FunctionList";
 
 const Functions = () => {
   const [filter, setFilter] = useState("");
