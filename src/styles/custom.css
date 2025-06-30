@@ -14,7 +14,8 @@ body {
   flex: 1;
 }
 
-p, h6{
+p,
+h6 {
   color: #e0e0e0;
 }
 
@@ -77,8 +78,17 @@ p, h6{
   background-color: #12100d;
   color: #fff;
 }
-.card p,.card-subtitle{
+.card p,
+.card-subtitle {
   color: #e0e0e0;
+}
+.call-to-action-link {
+  cursor: pointer;
+  text-decoration: none;
+  font-style: italic;
+}
+.call-to-action-link:hover {
+  text-decoration: underline;
 }
 
 /* modal styles */
@@ -101,6 +111,14 @@ p, h6{
 .modal-footer {
   color: #fff;
   background-color: #23211e;
+}
+
+/* spinner */
+.sipnner {
+  color: #12100d;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 /* footer styles*/

@@ -26,6 +26,10 @@ const Home = () => {
     loadStats();
   }, []);
 
+  const HandleCallToAction = () => {
+    navigate("/movies");
+  };
+
   if (error) {
     return (
       <div className="d-flex justify-content-center align-items-center mt-5">
@@ -44,16 +48,8 @@ const Home = () => {
           <p className="fs-6">
             System Statistics ·{" "}
             <strong
-              style={{
-                cursor: "pointer",
-                textDecoration: "none",
-                fontStyle: "italic",
-              }}
-              onClick={() => navigate("/movies")}
-              onMouseEnter={(e) =>
-                (e.target.style.textDecoration = "underline")
-              }
-              onMouseLeave={(e) => (e.target.style.textDecoration = "none")}
+              className="call-to-action-link"
+              onClick={HandleCallToAction}
             >
               View movies
             </strong>
