@@ -6,7 +6,6 @@ import FunctionList from "../components/functions/FunctionList";
 const Functions = () => {
   const [filter, setFilter] = useState("");
   const [functions, setFunctions] = useState([]);
-  const [movies, setMovies] = useState([]);
 
   useEffect(() => {
     const fetchAll = async () => {
@@ -18,7 +17,6 @@ const Functions = () => {
         functions.forEach((f) => allFunctions.push({ ...f, movie }));
       }
 
-      setMovies(moviesData);
       setFunctions(allFunctions);
     };
 

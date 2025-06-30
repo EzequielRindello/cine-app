@@ -3,20 +3,25 @@ import { Button, Form, Modal } from "react-bootstrap";
 import SuccessModal from "./SuccessModal";
 
 const AddFunctionModal = ({ show, handleClose, directorName }) => {
-  const [date, setDate] = useState("");
-  const [time, setTime] = useState("");
-  const [price, setPrice] = useState("");
+  const [formData, setFormData] = useState({
+    date: "",
+    time: "",
+    price: "",
+  });
+
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const today = new Date().toISOString().split("T")[0];
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    // add logic to create a new function
-    // make sure to validate the inputs before proceeding
-    // use services to coroborate with exptions:
-    // (International films: maximum 8 screenings)
-    // National films: unlimited
-    // Directors: max. 10 performances per day
     setShowSuccessModal(true);
   };
 
@@ -46,9 +51,10 @@ const AddFunctionModal = ({ show, handleClose, directorName }) => {
               <Form.Label>Date</Form.Label>
               <Form.Control
                 type="date"
-                value={date}
+                name="date"
+                value={formData.date}
                 min={today}
-                onChange={(e) => setDate(e.target.value)}
+                onChange={handleChange}
                 required
               />
             </Form.Group>
@@ -56,8 +62,9 @@ const AddFunctionModal = ({ show, handleClose, directorName }) => {
               <Form.Label>Time</Form.Label>
               <Form.Control
                 type="time"
-                value={time}
-                onChange={(e) => setTime(e.target.value)}
+                name="time"
+                value={formData.time}
+                onChange={handleChange}
                 required
               />
             </Form.Group>
@@ -65,10 +72,11 @@ const AddFunctionModal = ({ show, handleClose, directorName }) => {
               <Form.Label>Price</Form.Label>
               <Form.Control
                 type="number"
+                name="price"
                 min="0"
                 step="0.01"
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
+                value={formData.price}
+                onChange={handleChange}
                 required
               />
             </Form.Group>
