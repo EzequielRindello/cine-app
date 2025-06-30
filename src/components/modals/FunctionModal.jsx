@@ -1,16 +1,31 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import SuccessModal from "./SuccessModal";
 
-const AddFunctionModal = ({ show, handleClose, directorName }) => {
+const FunctionModal = ({show, handleClose, mode, directorName, func, onSuccess,}) => {
   const [formData, setFormData] = useState({
     date: "",
     time: "",
     price: "",
   });
-
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const today = new Date().toISOString().split("T")[0];
+
+  useEffect(() => {
+    if (mode === "edit" && func) {
+      setFormData({
+        date: func.date,
+        time: func.time,
+        price: func.price,
+      });
+    } else if (mode === "add") {
+      setFormData({
+        date: "",
+        time: "",
+        price: "",
+      });
+    }
+  }, [mode, func, show]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -22,38 +37,63 @@ const AddFunctionModal = ({ show, handleClose, directorName }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setShowSuccessModal(true);
+    if (mode === "add") {
+      setShowSuccessModal(true);
+    } else {
+      alert(
+        `Function updated: ${func.movie.title} on ${formData.date} at ${formData.time} for $${formData.price}`
+      );
+      handleClose();
+    }
+  };
+
+  const handleDelete = () => {
+    alert(
+      `Function deleted: ${func.movie.title} on ${func.date} at ${func.time}`
+    );
+    handleClose();
   };
 
   const handleSuccessClose = () => {
     setShowSuccessModal(false);
     handleClose();
+    if (onSuccess) onSuccess();
   };
 
   return (
     <>
-      <SuccessModal
-        show={showSuccessModal}
-        handleClose={handleSuccessClose}
-        message="Function added successfully!"
-      />
+      {mode === "add" && (
+        <SuccessModal
+          show={showSuccessModal}
+          handleClose={handleSuccessClose}
+          message="Function added successfully!"
+        />
+      )}
       <Modal show={show} onHide={handleClose}>
-        <Form onSubmit={handleSubmit} className="modal-add-function">
+        <Form onSubmit={handleSubmit} className={`modal-${mode}-function`}>
           <Modal.Header closeButton closeVariant="white">
-            <Modal.Title>Add Function</Modal.Title>
+            <Modal.Title>
+              {mode === "add" ? "Add Function" : "Edit Function"}
+            </Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form.Group className="mb-3">
               <Form.Label>Director</Form.Label>
-              <Form.Control type="text" value={directorName} readOnly />
+              <Form.Control
+                type="text"
+                value={
+                  mode === "add" ? directorName : func?.movie?.directorName
+                }
+                readOnly
+              />
             </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label>Date</Form.Label>
               <Form.Control
                 type="date"
                 name="date"
-                value={formData.date}
                 min={today}
+                value={formData.date}
                 onChange={handleChange}
                 required
               />
@@ -85,8 +125,17 @@ const AddFunctionModal = ({ show, handleClose, directorName }) => {
             <Button variant="secondary" onClick={handleClose}>
               Cancel
             </Button>
-            <Button variant="success" type="submit">
-              Add
+            {mode === "edit" && (
+              <Button variant="danger" onClick={handleDelete}>
+                Delete
+              </Button>
+            )}
+            <Button
+              variant="success"
+              type="submit"
+              className={mode === "edit" ? "edit-modal-button" : ""}
+            >
+              {mode === "add" ? "Add" : "Save Changes"}
             </Button>
           </Modal.Footer>
         </Form>
@@ -95,4 +144,4 @@ const AddFunctionModal = ({ show, handleClose, directorName }) => {
   );
 };
 
-export default AddFunctionModal;
+export default FunctionModal;

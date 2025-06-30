@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button, Card } from "react-bootstrap";
-import EditFunctionModal from "../modals/EditFunctionModal";
+import FunctionModal from "../modals/FunctionModal";
 
 const FunctionCard = ({ func }) => {
   const [showModal, setShowModal] = useState(false);
@@ -27,9 +27,10 @@ const FunctionCard = ({ func }) => {
           </Button>
         </Card.Body>
       </Card>
-      <EditFunctionModal
+      <FunctionModal
         show={showModal}
         handleClose={handleClose}
+        mode="edit"
         func={func}
       />
     </>

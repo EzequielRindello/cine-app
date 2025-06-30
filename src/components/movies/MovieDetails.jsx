@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Button, Card, Col, Row } from "react-bootstrap";
 import functionService from "../../services/functionService";
 import LoadingSpinner from "../common/LoadingSpinner";
-import AddFunctionModal from "../modals/AddFunctionModal";
+import FunctionModal from "../modals/FunctionModal";
 
 const MovieDetails = () => {
   const { id } = useParams();
@@ -100,10 +100,11 @@ const MovieDetails = () => {
           </Col>
         </Row>
       </Card>
-      <AddFunctionModal
+      <FunctionModal
         show={showModal}
         handleClose={handleCloseModal}
-        directorName={movieData.directorName}
+        mode="add"
+        directorName={movieData.movie.directorName}
       />
     </div>
   );
