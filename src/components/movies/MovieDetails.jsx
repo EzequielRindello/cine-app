@@ -50,27 +50,20 @@ const MovieDetails = () => {
 
   return (
     <div className="container mt-5 mb-5">
-      <Card style={{ minHeight: "300px" }}>
+      <Card className="min-h-300">
         <Row className="g-0">
           <Col md={4}>
             <Card.Img
               src={movieData.poster}
               alt={movieData.title}
-              style={{
-                height: "100%",
-                width: "100%",
-                objectFit: "cover",
-                borderRadius: "0.375rem 0 0 0.375rem",
-              }}
+              className="h-100 w-100 object-fit-cover"
             />
           </Col>
-
           <Col md={8}>
             <Card.Body className="d-flex flex-column justify-content-between h-100">
               <div>
                 <h1 className="display-4">{movieData.title}</h1>
-
-                <Card.Text className="mt-4 fs-5">
+                <div className="mt-4 fs-5">
                   <p>
                     <strong>Type:</strong> {movieData.type}
                   </p>
@@ -81,21 +74,21 @@ const MovieDetails = () => {
                     <strong>Description:</strong> {movieData.description}
                   </p>
                   <p>
-                    <strong>Fuctions created:</strong>
+                    <strong>Functions created:</strong>
                   </p>
-                  <ul>
-                    {functionsData.map((func) => (
-                      <li key={func.id}>
-                        {func.date} at {func.time} - ${func.price}
-                      </li>
-                    ))}
-                    {functionsData.length === 0 && (
-                      <p className="fs-6">No functions scheduled yet.</p>
-                    )}
-                  </ul>
-                </Card.Text>
+                  {functionsData.length > 0 ? (
+                    <ul>
+                      {functionsData.map((func) => (
+                        <li key={func.id}>
+                          {func.date} at {func.time} - ${func.price}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="fs-6">No functions scheduled yet.</p>
+                  )}
+                </div>
               </div>
-
               <div className="mt-4">
                 <Button
                   variant="secondary"
@@ -112,7 +105,6 @@ const MovieDetails = () => {
           </Col>
         </Row>
       </Card>
-
       <AddFunctionModal
         show={showModal}
         handleClose={() => setShowModal(false)}

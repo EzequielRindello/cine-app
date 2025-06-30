@@ -2,7 +2,7 @@ import { Col, Row } from "react-bootstrap";
 import LoadingSpinner from "../common/LoadingSpinner";
 import MovieCard from "./MovieCard";
 
-function MovieList({ movies }) {
+const MovieList = ({ movies }) => {
   if (!movies || movies.length === 0) {
     return (
       <div>
@@ -20,6 +20,6 @@ function MovieList({ movies }) {
       ))}
     </Row>
   );
-}
+};
 
 export default MovieList;

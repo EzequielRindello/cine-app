@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Button, Card } from "react-bootstrap";
 
-function MovieCard({ movie }) {
+const MovieCard = ({ movie }) => {
   const navigate = useNavigate();
 
   const handleViewDetails = () => {
@@ -25,6 +25,6 @@ function MovieCard({ movie }) {
       </Card.Body>
     </Card>
   );
-}
+};
 
 export default MovieCard;
