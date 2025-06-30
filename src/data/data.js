@@ -1,5 +1,5 @@
 // data.js - mock data
-
+import { MOVIE_ORIGIN } from "./cinema.consts.js";
 // available directors
 export const directors = [
   { id: 1, name: "Christopher Nolan", nationality: "British" },
@@ -100,8 +100,7 @@ export const movies = [
     directorId: 12,
     director: "Damián Szifron",
     type: "national",
-    poster:
-      "https://contarte.com.ar/wp-content/uploads/2024/08/Relatos.webp",
+    poster: "https://contarte.com.ar/wp-content/uploads/2024/08/Relatos.webp",
     description:
       "Six short stories that explore the extremities of human behavior involving people in distress.",
   },
@@ -241,8 +240,10 @@ export const functions = [
 
 // helper function to get stats for the home page
 export const getStats = () => {
-  const nationalMovies = movies.filter((m) => m.type === "national");
-  const internationalMovies = movies.filter((m) => m.type === "international");
+  const nationalMovies = movies.filter((m) => m.type === MOVIE_ORIGIN.NATIONAL);
+  const internationalMovies = movies.filter(
+    (m) => m.type === MOVIE_ORIGIN.INTERNATIONAL
+  );
 
   return {
     totalMovies: movies.length,
