@@ -29,6 +29,24 @@ export const functionService = {
     });
   },
 
+  async getAllFunctions() {
+    await delay(500); // Simula un poco de delay
+
+    return functionsData.map((func) => {
+      const movie = movies.find((m) => m.id === func.movieId);
+      const director = directors.find((d) => d.id === movie.directorId);
+
+      return {
+        ...func,
+        movie: {
+          ...movie,
+          directorName: director?.name,
+          nationality: director?.nationality,
+        },
+      };
+    });
+  },
+
   async getMovieFunctions(movieId) {
     await delay(300);
     const movie = movies.find((m) => m.id === parseInt(movieId));

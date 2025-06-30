@@ -8,27 +8,18 @@ const Functions = () => {
   const [functions, setFunctions] = useState([]);
 
   useEffect(() => {
-    const fetchAll = async () => {
-      const moviesData = await functionService.getMovies();
-      const allFunctions = [];
-
-      for (const movie of moviesData) {
-        const { functions } = await functionService.getMovieFunctions(movie.id);
-        functions.forEach((f) => allFunctions.push({ ...f, movie }));
-      }
-
-      setFunctions(allFunctions);
+    const fetchFunctions = async () => {
+      const data = await functionService.getAllFunctions();
+      setFunctions(data);
     };
 
-    fetchAll();
+    fetchFunctions();
   }, []);
 
-  const handleFilterChange = (e) => {
-    setFilter(e.target.value);
-  };
+  const handleFilterChange = (e) => setFilter(e.target.value);
 
-  const filtered = functions.filter((f) =>
-    f.movie.directorName.toLowerCase().includes(filter.toLowerCase())
+  const filteredFunctions = functions.filter((f) =>
+    f.movie?.directorName?.toLowerCase().includes(filter.toLowerCase())
   );
 
   return (
@@ -42,7 +33,7 @@ const Functions = () => {
           onChange={handleFilterChange}
         />
       </Form>
-      <FunctionList functions={filtered} />
+      <FunctionList functions={filteredFunctions} />
     </Container>
   );
 };
