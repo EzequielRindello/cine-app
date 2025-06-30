@@ -6,34 +6,21 @@ import LoadingSpinner from "../common/LoadingSpinner";
 import AddFunctionModal from "../modals/AddFunctionModal";
 
 const MovieDetails = () => {
-  const navigate = useNavigate();
   const { id } = useParams();
   const [movieData, setMovieData] = useState(null);
-  const [functionsData, setFunctionsData] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchDetails = async () => {
       try {
         const res = await functionService.getMovieFunctions(id);
-        setMovieData(res.movie);
+        setMovieData(res);
       } catch (err) {
-        console.error("Error loading movie:", err.message);
+        console.error("Error:", err.message);
       }
     };
     fetchDetails();
-  }, [id]);
-
-  useEffect(() => {
-    const fetchFunctions = async () => {
-      try {
-        const res = await functionService.getMovieFunctions(id);
-        setFunctionsData(res.functions);
-      } catch (err) {
-        console.error("Error loading functions:", err.message);
-      }
-    };
-    fetchFunctions();
   }, [id]);
 
   const handleGoBack = () => {
@@ -62,31 +49,31 @@ const MovieDetails = () => {
         <Row className="g-0">
           <Col md={4}>
             <Card.Img
-              src={movieData.poster}
-              alt={movieData.title}
+              src={movieData.movie.poster}
+              alt={movieData.movie.title}
               className="h-100 w-100 object-fit-cover"
             />
           </Col>
           <Col md={8}>
             <Card.Body className="d-flex flex-column justify-content-between h-100">
               <div>
-                <h1 className="display-4">{movieData.title}</h1>
+                <h1 className="display-4">{movieData.movie.title}</h1>
                 <div className="mt-4 fs-5">
                   <p>
-                    <strong>Type:</strong> {movieData.type}
+                    <strong>Type:</strong> {movieData.movie.type}
                   </p>
                   <p>
-                    <strong>Director:</strong> {movieData.directorName}
+                    <strong>Director:</strong> {movieData.movie.directorName}
                   </p>
                   <p>
-                    <strong>Description:</strong> {movieData.description}
+                    <strong>Description:</strong> {movieData.movie.description}
                   </p>
                   <p>
                     <strong>Functions created:</strong>
                   </p>
-                  {functionsData.length > 0 ? (
+                  {movieData.functions.length > 0 ? (
                     <ul>
-                      {functionsData.map((func) => (
+                      {movieData.functions.map((func) => (
                         <li key={func.id}>
                           {func.date} at {func.time} - ${func.price}
                         </li>
