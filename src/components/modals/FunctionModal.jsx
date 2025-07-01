@@ -84,7 +84,8 @@ const FunctionModal = ({show, handleClose, mode, directorName, func, onSuccess,}
                 value={
                   mode === "add" ? directorName : func?.movie?.directorName
                 }
-                readOnly
+                disabled
+                className="bg-light text-secondary"
               />
             </Form.Group>
             <Form.Group className="mb-3">

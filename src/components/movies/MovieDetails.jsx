@@ -9,15 +9,19 @@ const MovieDetails = () => {
   const { id } = useParams();
   const [movieData, setMovieData] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchDetails = async () => {
       try {
+        setIsLoading(true);
         const res = await functionService.getMovieFunctions(id);
         setMovieData(res);
+        setIsLoading(false);
       } catch (err) {
         console.error("Error:", err.message);
+        setIsLoading(false);
       }
     };
     fetchDetails();
@@ -35,10 +39,18 @@ const MovieDetails = () => {
     setShowModal(false);
   };
 
-  if (!movieData) {
+  if (isLoading) {
     return (
       <div className="d-flex justify-content-center mt-5">
         <LoadingSpinner />
+      </div>
+    );
+  }
+
+  if (!movieData) {
+    return (
+      <div className="container mt-5">
+        <h4 className="text-center">Movie not found. Please try again later</h4>
       </div>
     );
   }
