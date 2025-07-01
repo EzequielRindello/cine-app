@@ -11,7 +11,7 @@ const Functions = () => {
   useEffect(() => {
     const loadFunctions = async () => {
       setIsLoading(true);
-      await fetchFunctions;
+      await fetchFunctions();
       setIsLoading(false);
     };
 
