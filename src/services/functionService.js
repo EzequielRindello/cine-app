@@ -30,7 +30,7 @@ export const functionService = {
   },
 
   async getAllFunctions() {
-    await delay(500); // Simula un poco de delay
+    await delay(500);
 
     return functionsData.map((func) => {
       const movie = movies.find((m) => m.id === func.movieId);
@@ -81,6 +81,15 @@ export const functionService = {
     return currentFunctions.length < 8;
   },
 
+  canDirectorAddFunction(directorId, date) {
+    const directorFunctionsOnDate = functionsData.filter((func) => {
+      const movie = movies.find((m) => m.id === func.movieId);
+      return movie && movie.directorId === directorId && func.date === date;
+    });
+
+    return directorFunctionsOnDate.length < 10;
+  },
+
   async createFunction(movieId, date, time, price) {
     await delay(400);
 
@@ -117,6 +126,36 @@ export const functionService = {
 
     functionsData.push(newFunction);
     return newFunction;
+  },
+
+  async updateFunction(updatedFunction) {
+    await delay(400);
+
+    const index = functionsData.findIndex((f) => f.id === updatedFunction.id);
+    if (index === -1) {
+      throw new Error("Function not found");
+    }
+
+    functionsData[index] = {
+      ...functionsData[index],
+      date: updatedFunction.date,
+      time: updatedFunction.time,
+      price: parseFloat(updatedFunction.price),
+    };
+
+    return functionsData[index];
+  },
+
+  async deleteFunction(id) {
+    await delay(400);
+
+    const index = functionsData.findIndex((f) => f.id === id);
+    if (index === -1) {
+      throw new Error("Function not found");
+    }
+
+    functionsData.splice(index, 1);
+    return true;
   },
 };
 

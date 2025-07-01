@@ -6,6 +6,7 @@ const FunctionCard = ({ func }) => {
   const [showModal, setShowModal] = useState(false);
 
   const handleClick = () => {
+    console.log(func);
     setShowModal(true);
   };
 

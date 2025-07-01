@@ -13,20 +13,6 @@ export const MoviesProvider = ({ children }) => {
     setMovies(data);
   };
 
-  const handleAddMovie = (newMovie) => {
-    setMovies((prev) => [...prev, newMovie]);
-  };
-
-  const handleEditMovie = (updatedMovie) => {
-    setMovies((prev) =>
-      prev.map((m) => (m.id === updatedMovie.id ? updatedMovie : m))
-    );
-  };
-
-  const handleDeleteMovie = (id) => {
-    setMovies((prev) => prev.filter((m) => m.id !== id));
-  };
-
   useEffect(() => {
     fetchMovies();
   }, []);
@@ -36,9 +22,6 @@ export const MoviesProvider = ({ children }) => {
       value={{
         movies,
         fetchMovies,
-        handleAddMovie,
-        handleEditMovie,
-        handleDeleteMovie,
       }}
     >
       {children}

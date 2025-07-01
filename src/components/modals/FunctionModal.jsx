@@ -1,57 +1,64 @@
 import { useEffect, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
+import { useFunctions } from "../../contexts/FunctionsContext";
 import SuccessModal from "./SuccessModal";
 
-const FunctionModal = ({show, handleClose, mode, directorName, func, onSuccess,}) => {
-  const [formData, setFormData] = useState({
-    date: "",
-    time: "",
-    price: "",
-  });
+const FunctionModal = ({ show, handleClose, mode, directorName, func, movieId, onSuccess }) => {
+  const [formData, setFormData] = useState({ date: "", time: "", price: "" });
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [error, setError] = useState(null);
   const today = new Date().toISOString().split("T")[0];
+  
+  const { addFunction, editFunction, deleteFunction } = useFunctions();
 
   useEffect(() => {
+    setError(null);
     if (mode === "edit" && func) {
       setFormData({
         date: func.date,
         time: func.time,
         price: func.price,
       });
-    } else if (mode === "add") {
-      setFormData({
-        date: "",
-        time: "",
-        price: "",
-      });
+    } else {
+      setFormData({ date: "", time: "", price: "" });
     }
   }, [mode, func, show]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (mode === "add") {
-      setShowSuccessModal(true);
-    } else {
-      alert(
-        `Function updated: ${func.movie.title} on ${formData.date} at ${formData.time} for $${formData.price}`
-      );
-      handleClose();
+    setError(null);
+    try {
+      if (mode === "add") {
+        await addFunction(movieId, formData.date, formData.time, formData.price);
+        setShowSuccessModal(true);
+      } else {
+        await editFunction({
+          ...func,
+          date: formData.date,
+          time: formData.time,
+          price: formData.price,
+        });
+        handleClose();
+        if (onSuccess) onSuccess();
+      }
+    } catch (err) {
+      setError(err.message);
     }
   };
 
-  const handleDelete = () => {
-    alert(
-      `Function deleted: ${func.movie.title} on ${func.date} at ${func.time}`
-    );
-    handleClose();
+  const handleDelete = async () => {
+    try {
+      await deleteFunction(func.id);
+      handleClose();
+      if (onSuccess) onSuccess();
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
   const handleSuccessClose = () => {
@@ -70,20 +77,16 @@ const FunctionModal = ({show, handleClose, mode, directorName, func, onSuccess,}
         />
       )}
       <Modal show={show} onHide={handleClose}>
-        <Form onSubmit={handleSubmit} className={`modal-${mode}-function`}>
-          <Modal.Header closeButton closeVariant="white">
-            <Modal.Title>
-              {mode === "add" ? "Add Function" : "Edit Function"}
-            </Modal.Title>
+        <Form onSubmit={handleSubmit}>
+          <Modal.Header closeButton>
+            <Modal.Title>{mode === "add" ? "Add Function" : "Edit Function"}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form.Group className="mb-3">
               <Form.Label>Director</Form.Label>
               <Form.Control
                 type="text"
-                value={
-                  mode === "add" ? directorName : func?.movie?.directorName
-                }
+                value={mode === "add" ? directorName : func?.movie?.directorName}
                 disabled
                 className="bg-light text-secondary"
               />
@@ -121,21 +124,14 @@ const FunctionModal = ({show, handleClose, mode, directorName, func, onSuccess,}
                 required
               />
             </Form.Group>
+            {error && <div className="text-danger">{error}</div>}
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={handleClose}>
-              Cancel
-            </Button>
+            <Button variant="secondary" onClick={handleClose}>Cancel</Button>
             {mode === "edit" && (
-              <Button variant="danger" onClick={handleDelete}>
-                Delete
-              </Button>
+              <Button variant="danger" onClick={handleDelete}>Delete</Button>
             )}
-            <Button
-              variant="success"
-              type="submit"
-              className={mode === "edit" ? "edit-modal-button" : ""}
-            >
+            <Button variant="success" type="submit">
               {mode === "add" ? "Add" : "Save Changes"}
             </Button>
           </Modal.Footer>

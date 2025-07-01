@@ -117,6 +117,7 @@ const MovieDetails = () => {
         handleClose={handleCloseModal}
         mode="add"
         directorName={movieData.movie.directorName}
+        movieId={movieData.movie.id}
       />
     </div>
   );

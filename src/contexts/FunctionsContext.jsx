@@ -13,12 +13,31 @@ export const FunctionsProvider = ({ children }) => {
     setFunctions(data);
   };
 
-  const handleAddFunction = (func) => {
-    setFunctions((prev) => [...prev, func]);
+  const addFunction = async (movieId, date, time, price) => {
+    try {
+      await functionService.createFunction(movieId, date, time, price);
+      await fetchFunctions();
+    } catch (error) {
+      throw error;
+    }
   };
 
-  const handleDeleteFunction = (id) => {
-    setFunctions((prev) => prev.filter((f) => f.id !== id));
+  const editFunction = async (updatedFunction) => {
+    try {
+      await functionService.updateFunction(updatedFunction);
+      await fetchFunctions();
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const deleteFunction = async (id) => {
+    try {
+      await functionService.deleteFunction(id);
+      await fetchFunctions();
+    } catch (error) {
+      throw error;
+    }
   };
 
   useEffect(() => {
@@ -30,8 +49,9 @@ export const FunctionsProvider = ({ children }) => {
       value={{
         functions,
         fetchFunctions,
-        handleAddFunction,
-        handleDeleteFunction,
+        addFunction,
+        editFunction,
+        deleteFunction,
       }}
     >
       {children}
