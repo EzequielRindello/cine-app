@@ -1,21 +1,20 @@
 import { useEffect, useState } from "react";
 import { Container, Form } from "react-bootstrap";
-import functionService from "../services/functionService";
+import { useMovies } from "../contexts/MoviesContext";
 import MovieList from "../components/movies/MovieList";
 
 const Movies = () => {
   const [filter, setFilter] = useState("");
-  const [movies, setMovies] = useState([]);
+  const { movies, fetchMovies } = useMovies();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const fetchMovies = async () => {
+    const loadMovies = async () => {
       setIsLoading(true);
-      const data = await functionService.getMovies();
-      setMovies(data);
+      await fetchMovies();
       setIsLoading(false);
     };
-    fetchMovies();
+    loadMovies();
   }, []);
 
   const handleFilterChange = (e) => {

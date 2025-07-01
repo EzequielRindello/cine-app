@@ -1,22 +1,21 @@
 import { useEffect, useState } from "react";
 import { Container, Form } from "react-bootstrap";
-import functionService from "../services/functionService";
+import { useFunctions } from "../contexts/FunctionsContext";
 import FunctionList from "../components/functions/FunctionList";
 
 const Functions = () => {
   const [filter, setFilter] = useState("");
-  const [functions, setFunctions] = useState([]);
+  const { functions, fetchFunctions } = useFunctions();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const fetchFunctions = async () => {
+    const loadFunctions = async () => {
       setIsLoading(true);
-      const data = await functionService.getAllFunctions();
-      setFunctions(data);
+      await fetchFunctions;
       setIsLoading(false);
     };
 
-    fetchFunctions();
+    loadFunctions();
   }, []);
 
   const handleFilterChange = (e) => setFilter(e.target.value);
