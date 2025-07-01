@@ -2,13 +2,24 @@ import { useEffect, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { useFunctions } from "../../contexts/FunctionsContext";
 import SuccessModal from "./SuccessModal";
+import DeleteConfirmationModal from "./DeleteConfirmationModal";
 
-const FunctionModal = ({ show, handleClose, mode, directorName, func, movieId, onSuccess }) => {
+const FunctionModal = ({
+  show,
+  handleClose,
+  mode,
+  directorName,
+  func,
+  movieId,
+  onSuccess,
+}) => {
   const [formData, setFormData] = useState({ date: "", time: "", price: "" });
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
   const [error, setError] = useState(null);
   const today = new Date().toISOString().split("T")[0];
-  
+
   const { addFunction, editFunction, deleteFunction } = useFunctions();
 
   useEffect(() => {
@@ -34,7 +45,13 @@ const FunctionModal = ({ show, handleClose, mode, directorName, func, movieId, o
     setError(null);
     try {
       if (mode === "add") {
-        await addFunction(movieId, formData.date, formData.time, formData.price);
+        await addFunction(
+          movieId,
+          formData.date,
+          formData.time,
+          formData.price
+        );
+        setSuccessMessage("Function added successfully!");
         setShowSuccessModal(true);
       } else {
         await editFunction({
@@ -43,22 +60,34 @@ const FunctionModal = ({ show, handleClose, mode, directorName, func, movieId, o
           time: formData.time,
           price: formData.price,
         });
-        handleClose();
-        if (onSuccess) onSuccess();
+        setSuccessMessage("Function updated successfully!");
+        setShowSuccessModal(true);
       }
     } catch (err) {
       setError(err.message);
     }
   };
 
-  const handleDelete = async () => {
+  const handleDeleteClick = () => {
+    setShowDeleteModal(true);
+  };
+
+  const handleDeleteConfirm = async () => {
     try {
       await deleteFunction(func.id);
-      handleClose();
-      if (onSuccess) onSuccess();
+      setShowDeleteModal(false);
+      setSuccessMessage("Function deleted successfully!");
+      setShowSuccessModal(true);
     } catch (err) {
       setError(err.message);
+      setShowDeleteModal(false);
+    } finally {
+      setIsDeleting(false);
     }
+  };
+
+  const handleDeleteCancel = () => {
+    setShowDeleteModal(false);
   };
 
   const handleSuccessClose = () => {
@@ -69,24 +98,33 @@ const FunctionModal = ({ show, handleClose, mode, directorName, func, movieId, o
 
   return (
     <>
-      {mode === "add" && (
-        <SuccessModal
-          show={showSuccessModal}
-          handleClose={handleSuccessClose}
-          message="Function added successfully!"
-        />
-      )}
+      <SuccessModal
+        show={showSuccessModal}
+        handleClose={handleSuccessClose}
+        message={successMessage}
+      />
+
+      <DeleteConfirmationModal
+        show={showDeleteModal}
+        handleClose={handleDeleteCancel}
+        handleConfirm={handleDeleteConfirm}
+      />
+
       <Modal show={show} onHide={handleClose}>
         <Form onSubmit={handleSubmit}>
           <Modal.Header closeButton>
-            <Modal.Title>{mode === "add" ? "Add Function" : "Edit Function"}</Modal.Title>
+            <Modal.Title>
+              {mode === "add" ? "Add Function" : "Edit Function"}
+            </Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form.Group className="mb-3">
               <Form.Label>Director</Form.Label>
               <Form.Control
                 type="text"
-                value={mode === "add" ? directorName : func?.movie?.directorName}
+                value={
+                  mode === "add" ? directorName : func?.movie?.directorName
+                }
                 disabled
                 className="bg-light text-secondary"
               />
@@ -127,9 +165,13 @@ const FunctionModal = ({ show, handleClose, mode, directorName, func, movieId, o
             {error && <div className="text-danger">{error}</div>}
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={handleClose}>Cancel</Button>
+            <Button variant="secondary" onClick={handleClose}>
+              Cancel
+            </Button>
             {mode === "edit" && (
-              <Button variant="danger" onClick={handleDelete}>Delete</Button>
+              <Button variant="danger" onClick={handleDeleteClick}>
+                Delete
+              </Button>
             )}
             <Button variant="success" type="submit">
               {mode === "add" ? "Add" : "Save Changes"}
