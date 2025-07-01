@@ -21,9 +21,13 @@ const Functions = () => {
 
   const handleFilterChange = (e) => setFilter(e.target.value);
 
-  const filteredFunctions = functions.filter((f) =>
-    f.movie?.directorName?.toLowerCase().includes(filter.toLowerCase())
-  );
+  const filteredFunctions = functions.filter((f) => {
+    const director = f.movie?.directorName?.toLowerCase() || "";
+    const title = f.movie?.title?.toLowerCase() || "";
+    const query = filter.toLowerCase();
+
+    return director.includes(query) || title.includes(query);
+  });
 
   return (
     <Container className="mt-5 mb-5">
@@ -31,7 +35,7 @@ const Functions = () => {
       <Form className="mb-3">
         <Form.Control
           type="text"
-          placeholder="Filter by director name..."
+          placeholder="Search by director or movie title"
           value={filter}
           onChange={handleFilterChange}
         />
