@@ -6,11 +6,14 @@ import FunctionList from "../components/functions/FunctionList";
 const Functions = () => {
   const [filter, setFilter] = useState("");
   const [functions, setFunctions] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchFunctions = async () => {
+      setIsLoading(true);
       const data = await functionService.getAllFunctions();
       setFunctions(data);
+      setIsLoading(false);
     };
 
     fetchFunctions();
@@ -33,7 +36,7 @@ const Functions = () => {
           onChange={handleFilterChange}
         />
       </Form>
-      <FunctionList functions={filteredFunctions} />
+      <FunctionList functions={filteredFunctions} isLoading={isLoading} />
     </Container>
   );
 };

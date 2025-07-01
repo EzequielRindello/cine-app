@@ -2,9 +2,17 @@ import { Col, Row } from "react-bootstrap";
 import LoadingSpinner from "../common/LoadingSpinner";
 import FunctionCard from "./FunctionCard";
 
-const FunctionList = ({ functions }) => {
-  if (functions.length === 0) {
-    return <LoadingSpinner />;
+const FunctionList = ({ functions, isLoading }) => {
+  if (isLoading) {
+    return (
+      <div>
+        <LoadingSpinner />
+      </div>
+    );
+  }
+
+  if (!functions || functions.length === 0) {
+    return <p>No functions were found</p>;
   }
 
   return (

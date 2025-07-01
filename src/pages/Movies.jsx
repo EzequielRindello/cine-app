@@ -6,11 +6,14 @@ import MovieList from "../components/movies/MovieList";
 const Movies = () => {
   const [filter, setFilter] = useState("");
   const [movies, setMovies] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchMovies = async () => {
+      setIsLoading(true);
       const data = await functionService.getMovies();
       setMovies(data);
+      setIsLoading(false);
     };
     fetchMovies();
   }, []);
@@ -34,7 +37,7 @@ const Movies = () => {
           onChange={handleFilterChange}
         />
       </Form>
-      <MovieList movies={filteredMovies} />
+      <MovieList movies={filteredMovies} isLoading={isLoading} />
     </Container>
   );
 };

@@ -2,13 +2,17 @@ import { Col, Row } from "react-bootstrap";
 import LoadingSpinner from "../common/LoadingSpinner";
 import MovieCard from "./MovieCard";
 
-const MovieList = ({ movies }) => {
-  if (!movies || movies.length === 0) {
+const MovieList = ({ movies, isLoading }) => {
+  if (isLoading) {
     return (
       <div>
         <LoadingSpinner />
       </div>
     );
+  }
+
+  if (!movies || movies.length === 0) {
+    return <p>No movies were found</p>;
   }
 
   return (
