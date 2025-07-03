@@ -1,5 +1,3 @@
-// data.js - mock data
-import { MOVIE_ORIGIN } from "./cinema.consts.js";
 // available directors
 export const directors = [
   { id: 1, name: "Christopher Nolan", nationality: "British" },
