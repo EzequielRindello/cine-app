@@ -1,4 +1,4 @@
-import { directors, functions, getStats, movies } from "../data/data";
+import { directors, functions, movies } from "../data/data";
 
 const STORAGE_KEYS = {
   FUNCTIONS: "cinema_functions",
