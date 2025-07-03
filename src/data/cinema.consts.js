@@ -7,3 +7,8 @@ export const MODAL_MODES = {
   ADD: "add",
   EDIT: "edit",
 };
+
+export const ENDPOINTS = {
+  MOVIES: "https://localhost:7063/api/Movies",
+  FUNCTION: "https://localhost:7063/api/Functions",
+};
