@@ -237,19 +237,3 @@ export const functions = [
     price: 2600,
   },
 ];
-
-// helper function to get stats for the home page
-export const getStats = () => {
-  const nationalMovies = movies.filter((m) => m.type === MOVIE_ORIGIN.NATIONAL);
-  const internationalMovies = movies.filter(
-    (m) => m.type === MOVIE_ORIGIN.INTERNATIONAL
-  );
-
-  return {
-    totalMovies: movies.length,
-    nationalMovies: nationalMovies.length,
-    internationalMovies: internationalMovies.length,
-    totalDirectors: directors.length,
-    totalFunctions: functions.length,
-  };
-};
