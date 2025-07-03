@@ -5,8 +5,9 @@ import MovieList from "../components/movies/MovieList";
 
 const Movies = () => {
   const [filter, setFilter] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
   const { movies, fetchMovies } = useMovies();
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const loadMovies = async () => {

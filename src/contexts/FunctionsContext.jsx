@@ -13,62 +13,43 @@ export const useFunctions = () => {
 
 export const FunctionsProvider = ({ children }) => {
   const [functions, setFunctions] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
 
   const fetchFunctions = async () => {
     try {
-      setLoading(true);
-      setError(null);
       const data = await functionService.getAllFunctions();
       setFunctions(data);
     } catch (err) {
-      setError(err.message);
       console.error("Error fetching functions:", err);
-    } finally {
-      setLoading(false);
     }
   };
 
   const addFunction = async (movieId, date, time, price) => {
     try {
-      setLoading(true);
-      setError(null);
       await functionService.createFunction(movieId, date, time, price);
       await fetchFunctions();
     } catch (error) {
-      setError(error.message);
+      console.error("Error adding function:", error);
       throw error;
-    } finally {
-      setLoading(false);
     }
   };
 
   const editFunction = async (updatedFunction) => {
     try {
-      setLoading(true);
-      setError(null);
       await functionService.updateFunction(updatedFunction);
       await fetchFunctions();
     } catch (error) {
-      setError(error.message);
+      console.error("Error editing function:", error);
       throw error;
-    } finally {
-      setLoading(false);
     }
   };
 
   const deleteFunction = async (id) => {
     try {
-      setLoading(true);
-      setError(null);
       await functionService.deleteFunction(id);
       await fetchFunctions();
     } catch (error) {
-      setError(error.message);
+      console.error("Error deleting function:", error);
       throw error;
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -76,7 +57,7 @@ export const FunctionsProvider = ({ children }) => {
     try {
       return await functionService.getStats();
     } catch (error) {
-      setError(error.message);
+      console.error("Error getting stats:", error);
       throw error;
     }
   };
@@ -85,7 +66,7 @@ export const FunctionsProvider = ({ children }) => {
     try {
       return await functionService.getMovies();
     } catch (error) {
-      setError(error.message);
+      console.error("Error getting movies:", error);
       throw error;
     }
   };
@@ -96,8 +77,6 @@ export const FunctionsProvider = ({ children }) => {
 
   const value = {
     functions,
-    loading,
-    error,
     fetchFunctions,
     addFunction,
     editFunction,

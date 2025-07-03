@@ -91,6 +91,12 @@ h6 {
   text-decoration: underline;
 }
 
+/* movies styles */
+.movie-poster {
+  height: 250px;
+  object-fit: cover;
+}
+
 /* modal styles */
 .modal-edit-function,
 .modal-add-function,

@@ -5,8 +5,9 @@ import FunctionList from "../components/functions/FunctionList";
 
 const Functions = () => {
   const [filter, setFilter] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
   const { functions, fetchFunctions } = useFunctions();
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const loadFunctions = async () => {

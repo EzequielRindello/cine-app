@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { useFunctions } from "../../contexts/FunctionsContext";
+import { MODAL_MODES } from "../../data/cinema.consts";
 import SuccessModal from "./SuccessModal";
 import DeleteConfirmationModal from "./DeleteConfirmationModal";
 
@@ -24,7 +25,7 @@ const FunctionModal = ({
 
   useEffect(() => {
     setError(null);
-    if (mode === "edit" && func) {
+    if (mode === MODAL_MODES.EDIT && func) {
       setFormData({
         date: func.date,
         time: func.time,
@@ -44,7 +45,7 @@ const FunctionModal = ({
     e.preventDefault();
     setError(null);
     try {
-      if (mode === "add") {
+      if (mode === MODAL_MODES.ADD) {
         await addFunction(
           movieId,
           formData.date,
@@ -114,7 +115,7 @@ const FunctionModal = ({
         <Form onSubmit={handleSubmit}>
           <Modal.Header closeButton>
             <Modal.Title>
-              {mode === "add" ? "Add Function" : "Edit Function"}
+              {mode === MODAL_MODES.ADD ? "Add Function" : "Edit Function"}
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>
@@ -123,7 +124,7 @@ const FunctionModal = ({
               <Form.Control
                 type="text"
                 value={
-                  mode === "add" ? directorName : func?.movie?.directorName
+                  mode === MODAL_MODES.ADD ? directorName : func?.movie?.directorName
                 }
                 disabled
                 className="bg-light text-secondary"
@@ -168,13 +169,13 @@ const FunctionModal = ({
             <Button variant="secondary" onClick={handleClose}>
               Cancel
             </Button>
-            {mode === "edit" && (
+            {mode === MODAL_MODES.EDIT && (
               <Button variant="danger" onClick={handleDeleteClick}>
                 Delete
               </Button>
             )}
             <Button variant="success" type="submit">
-              {mode === "add" ? "Add" : "Save Changes"}
+              {mode === MODAL_MODES.ADD ? "Add" : "Save Changes"}
             </Button>
           </Modal.Footer>
         </Form>

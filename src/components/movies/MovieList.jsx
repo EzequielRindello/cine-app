@@ -4,11 +4,7 @@ import MovieCard from "./MovieCard";
 
 const MovieList = ({ movies, isLoading }) => {
   if (isLoading) {
-    return (
-      <div>
-        <LoadingSpinner />
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   if (!movies || movies.length === 0) {

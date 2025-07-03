@@ -4,11 +4,7 @@ import FunctionCard from "./FunctionCard";
 
 const FunctionList = ({ functions, isLoading }) => {
   if (isLoading) {
-    return (
-      <div>
-        <LoadingSpinner />
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   if (!functions || functions.length === 0) {

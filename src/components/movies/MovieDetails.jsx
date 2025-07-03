@@ -6,10 +6,10 @@ import LoadingSpinner from "../common/LoadingSpinner";
 import FunctionModal from "../modals/FunctionModal";
 
 const MovieDetails = () => {
-  const { id } = useParams();
   const [movieData, setMovieData] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const { id } = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
