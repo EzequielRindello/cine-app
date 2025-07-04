@@ -26,7 +26,7 @@ const LoginForm = () => {
     }));
   };
 
-  const { login, authError } = useAuth();
+  const { token, login, authError } = useAuth();
 
   const handleCreateAccount = () => {
     setShowModal(true);
@@ -64,43 +64,47 @@ const LoginForm = () => {
   return (
     <>
       <Container className="d-flex justify-content-center align-items-center mt-5">
-        <Card className="login-form p-4 shadow mt-5">
-          <h3 className="mb-3 text-center">Enter your credentials</h3>
-          <Form onSubmit={handleSubmit}>
-            {error && <Alert variant="danger">{error}</Alert>}
-            {authError && <Alert variant="danger">{authError}</Alert>}
+        {token ? (
+          <p>You are already logged</p>
+        ) : (
+          <Card className="login-form p-4 shadow mt-5">
+            <h3 className="mb-3 text-center">Enter your credentials</h3>
+            <Form onSubmit={handleSubmit}>
+              {error && <Alert variant="danger">{error}</Alert>}
+              {authError && <Alert variant="danger">{authError}</Alert>}
 
-            <Form.Group className="mb-3" controlId="formEmail">
-              <Form.Label>Email</Form.Label>
-              <Form.Control
-                type="email"
-                placeholder="example@gmail.com"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-              />
-            </Form.Group>
+              <Form.Group className="mb-3" controlId="formEmail">
+                <Form.Label>Email</Form.Label>
+                <Form.Control
+                  type="email"
+                  placeholder="example@gmail.com"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                />
+              </Form.Group>
 
-            <Form.Group className="mb-3" controlId="formPassword">
-              <Form.Label>Password</Form.Label>
-              <Form.Control
-                type="password"
-                placeholder="Your passsword"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                required
-              />
-            </Form.Group>
+              <Form.Group className="mb-3" controlId="formPassword">
+                <Form.Label>Password</Form.Label>
+                <Form.Control
+                  type="password"
+                  placeholder="Your passsword"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                />
+              </Form.Group>
 
-            <p onClick={handleCreateAccount}>Dont have an account?</p>
+              <p onClick={handleCreateAccount}>Dont have an account?</p>
 
-            <Button variant="primary" type="submit" className="w-100">
-              Login
-            </Button>
-          </Form>
-        </Card>
+              <Button variant="primary" type="submit" className="w-100">
+                Login
+              </Button>
+            </Form>
+          </Card>
+        )}
       </Container>
 
       <LoginModal
