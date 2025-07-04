@@ -1,5 +1,6 @@
 import { useState } from "react";
-import {Alert, Modal, Form, Button } from "react-bootstrap";
+import { Alert, Modal, Form, Button } from "react-bootstrap";
+import { useAuth } from "../../contexts/AuthContext";
 
 const LoginModal = ({ show, onClose, onRegister }) => {
   const [formData, setFormData] = useState({
@@ -10,6 +11,8 @@ const LoginModal = ({ show, onClose, onRegister }) => {
   });
   const [error, setError] = useState("");
 
+  const { register, authError } = useAuth();
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -18,14 +21,14 @@ const LoginModal = ({ show, onClose, onRegister }) => {
     }));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const { firstName, lastName, email, password } = formData;
     if (!firstName || !lastName || !email || !password) {
       setError("Please complete all fields");
       return;
     }
 
-    onRegister?.(formData);
+    await register(formData);
     onClose();
   };
 
@@ -36,6 +39,7 @@ const LoginModal = ({ show, onClose, onRegister }) => {
       </Modal.Header>
       <Modal.Body>
         {error && <Alert variant="danger">{error}</Alert>}
+        {authError && <Alert variant="danger">{authError}</Alert>}
         <Form>
           <Form.Group className="mb-3">
             <Form.Label>First Name</Form.Label>

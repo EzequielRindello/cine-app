@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Form, Button, Alert, Container, Card } from "react-bootstrap";
-import LoginModal from "../components/modals/LoginModal"
+import { useAuth } from "../contexts/AuthContext";
+import LoginModal from "../components/modals/LoginModal";
 
 const LoginForm = () => {
   const [formData, setFormData] = useState({
@@ -19,6 +20,8 @@ const LoginForm = () => {
     }));
   };
 
+  const { login, authError } = useAuth();
+
   const handleCreateAccount = () => {
     setShowModal(true);
   };
@@ -27,7 +30,7 @@ const LoginForm = () => {
     console.log("Account created:", data);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const { email, password } = formData;
@@ -37,7 +40,7 @@ const LoginForm = () => {
       return;
     }
 
-    onLogin?.(email, password);
+    await login(email, password);
   };
 
   return (
@@ -47,6 +50,7 @@ const LoginForm = () => {
           <h3 className="mb-3 text-center">Enter your credentials</h3>
           <Form onSubmit={handleSubmit}>
             {error && <Alert variant="danger">{error}</Alert>}
+            {authError && <Alert variant="danger">{authError}</Alert>}
 
             <Form.Group className="mb-3" controlId="formEmail">
               <Form.Label>Email</Form.Label>

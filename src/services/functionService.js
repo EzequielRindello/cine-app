@@ -1,5 +1,14 @@
 import { ENDPOINTS, MOVIE_ORIGIN } from "../data/cinema.consts";
 
+// helper to get toker
+const getAuthHeaders = () => {
+  const token = localStorage.getItem("token");
+  return {
+    "Content-Type": "application/json",
+    ...(token && { Authorization: `Bearer ${token}` }),
+  };
+};
+
 // API Methods
 export const functionService = {
   async getStats() {
@@ -214,6 +223,7 @@ export const functionService = {
 
       const response = await fetch(ENDPOINTS.FUNCTION, {
         method: "POST",
+        headers: getAuthHeaders(),
         headers: {
           "Content-Type": "application/json",
         },
@@ -237,6 +247,7 @@ export const functionService = {
         `${ENDPOINTS.FUNCTION}/${updatedFunction.id}`,
         {
           method: "PUT",
+          headers: getAuthHeaders(),
           headers: {
             "Content-Type": "application/json",
           },
@@ -265,6 +276,7 @@ export const functionService = {
     try {
       const response = await fetch(`${ENDPOINTS.FUNCTION}/${id}`, {
         method: "DELETE",
+        headers: getAuthHeaders(),
       });
 
       if (!response.ok) {

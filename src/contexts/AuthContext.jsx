@@ -1,0 +1,48 @@
+import { createContext, useContext, useState } from "react";
+import * as loginService from "../services/loginService";
+
+const AuthContext = createContext();
+
+export const AuthProvider = ({ children }) => {
+  const [token, setToken] = useState(localStorage.getItem("token") || "");
+  const [user, setUser] = useState(null);
+  const [authError, setAuthError] = useState("");
+
+  const login = async (email, password) => {
+    try {
+      const res = await loginService.login(email, password);
+      setToken(res.token);
+      setUser(res.user);
+      localStorage.setItem("token", res.token);
+      setAuthError("");
+    } catch (err) {
+      setAuthError("Invalid credentials");
+    }
+  };
+
+  const register = async (data) => {
+    try {
+      const res = await loginService.register(data);
+      // auto-login after registration
+      await login(data.email, data.password);
+    } catch (err) {
+      setAuthError("Registration failed");
+    }
+  };
+
+  const logout = () => {
+    setToken("");
+    setUser(null);
+    localStorage.removeItem("token");
+  };
+
+  return (
+    <AuthContext.Provider
+      value={{ token, user, login, register, logout, authError }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
+export const useAuth = () => useContext(AuthContext);
