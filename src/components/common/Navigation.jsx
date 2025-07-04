@@ -1,19 +1,23 @@
 import { NavLink, useNavigate } from "react-router-dom";
-import { Container, Nav, Navbar } from "react-bootstrap";
+import { Container, Nav, Navbar, Button } from "react-bootstrap";
 
 import reactLogo from "/react-logo.png";
 
 const Navigation = () => {
   const navigate = useNavigate();
 
-  const hadleLogoClick = () => {
+  const handleLogoClick = () => {
     navigate("/");
+  };
+
+  const handleLoginClick = () => {
+    navigate("/login");
   };
 
   return (
     <Navbar className="main-navbar" expand="md">
       <Container>
-        <Navbar.Brand className="nav-title" onClick={hadleLogoClick}>
+        <Navbar.Brand className="nav-title" onClick={handleLogoClick}>
           <img src={reactLogo} alt="React Logo" className="react-logo" />
           MOVIEapp
         </Navbar.Brand>
@@ -29,6 +33,9 @@ const Navigation = () => {
             <Nav.Link as={NavLink} to="/functions">
               Functions
             </Nav.Link>
+            <Button variant="outline-light" className="ms-3" onClick={handleLoginClick}>
+              Login
+            </Button>
           </Nav>
         </Navbar.Collapse>
       </Container>

@@ -6,6 +6,8 @@ import MovieDetails from "./components/movies/MovieDetails";
 import Functions from "./pages/Functions";
 import Home from "./pages/Home";
 import Movies from "./pages/Movies";
+import Login from "./pages/Login";
+import UserProfile from "./pages/UserProfile";
 import NotFound from "./pages/NotFound";
 
 function App() {
@@ -22,6 +24,9 @@ function App() {
 
             <Route path="/movies" element={<Movies />} />
             <Route path="/movies/:id" element={<MovieDetails />} />
+
+            <Route path="/login" element={<Login />} />
+            <Route path="/profile" element={<UserProfile />} />
 
             <Route path="*" element={<NotFound />} />
           </Routes>
