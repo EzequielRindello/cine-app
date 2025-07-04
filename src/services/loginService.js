@@ -1,5 +1,14 @@
 import { ENDPOINTS } from "../data/cinema.consts";
 
+// helper to get token
+const getAuthHeaders = () => {
+  const token = localStorage.getItem("token");
+  return {
+    "Content-Type": "application/json",
+    ...(token && { Authorization: `Bearer ${token}` }),
+  };
+};
+
 export const login = async (email, password) => {
   const response = await fetch(ENDPOINTS.AUTH_LOGIN, {
     method: "POST",
@@ -24,6 +33,20 @@ export const register = async (data) => {
   });
 
   if (!response.ok) throw new Error("Registration failed");
+
+  return await response.json();
+};
+
+export const getUserById = async (id) => {
+  const response = await fetch(`${ENDPOINTS.AUTH_USER}/${id}`, {
+    method: "GET",
+    headers: getAuthHeaders(),
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || "Failed to fetch user");
+  }
 
   return await response.json();
 };
