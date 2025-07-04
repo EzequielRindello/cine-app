@@ -1,7 +1,7 @@
 import { ENDPOINTS } from "../data/cinema.consts";
 
 export const login = async (email, password) => {
-  const response = await fetch(ENDPOINTS.AUTH, {
+  const response = await fetch(ENDPOINTS.AUTH_LOGIN, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -15,7 +15,7 @@ export const login = async (email, password) => {
 };
 
 export const register = async (data) => {
-  const response = await fetch(ENDPOINTS.AUTH, {
+  const response = await fetch(ENDPOINTS.AUTH_REGISTER, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
