@@ -1,261 +1,309 @@
-import { directors, functions, movies } from "../data/data";
-
-const STORAGE_KEYS = {
-  FUNCTIONS: "cinema_functions",
-  MOVIES: "cinema_movies",
-  DIRECTORS: "cinema_directors",
-};
-
-const delay = (ms = 500) => new Promise((resolve) => setTimeout(resolve, ms));
-
-const initializeLocalStorage = () => {
-  if (!localStorage.getItem(STORAGE_KEYS.FUNCTIONS)) {
-    localStorage.setItem(STORAGE_KEYS.FUNCTIONS, JSON.stringify(functions));
-  }
-  if (!localStorage.getItem(STORAGE_KEYS.MOVIES)) {
-    localStorage.setItem(STORAGE_KEYS.MOVIES, JSON.stringify(movies));
-  }
-  if (!localStorage.getItem(STORAGE_KEYS.DIRECTORS)) {
-    localStorage.setItem(STORAGE_KEYS.DIRECTORS, JSON.stringify(directors));
-  }
-};
-
-const getFromStorage = (key) => {
-  try {
-    const data = localStorage.getItem(key);
-    return data ? JSON.parse(data) : [];
-  } catch (error) {
-    console.error(`Error reading from localStorage key ${key}:`, error);
-    return [];
-  }
-};
-
-const saveToStorage = (key, data) => {
-  try {
-    localStorage.setItem(key, JSON.stringify(data));
-  } catch (error) {
-    console.error(`Error saving to localStorage key ${key}:`, error);
-  }
-};
-
-initializeLocalStorage();
+import { ENDPOINTS, MOVIE_ORIGIN } from "../data/cinema.consts";
 
 // API Methods
 export const functionService = {
   async getStats() {
-    await delay(300);
-    const moviesData = getFromStorage(STORAGE_KEYS.MOVIES);
-    const directorsData = getFromStorage(STORAGE_KEYS.DIRECTORS);
-    const functionsData = getFromStorage(STORAGE_KEYS.FUNCTIONS);
+    try {
+      const [moviesResponse, functionsResponse] = await Promise.all([
+        fetch(ENDPOINTS.MOVIES),
+        fetch(ENDPOINTS.FUNCTION),
+      ]);
 
-    const nationalMovies = moviesData.filter((m) => m.type === "national");
-    const internationalMovies = moviesData.filter(
-      (m) => m.type === "international"
-    );
+      const moviesData = await moviesResponse.json();
+      const functionsData = await functionsResponse.json();
 
-    return {
-      totalMovies: moviesData.length,
-      nationalMovies: nationalMovies.length,
-      internationalMovies: internationalMovies.length,
-      totalDirectors: directorsData.length,
-      totalFunctions: functionsData.length,
-    };
+      const nationalMovies = moviesData.filter(
+        (m) => m.type === MOVIE_ORIGIN.NATIONAL
+      );
+      const internationalMovies = moviesData.filter(
+        (m) => m.type === MOVIE_ORIGIN.INTERNATIONAL
+      );
+
+      const uniqueDirectors = new Set();
+      moviesData.forEach((movie) => {
+        if (movie.director) {
+          uniqueDirectors.add(movie.director.id);
+        }
+      });
+
+      return {
+        totalMovies: moviesData.length,
+        nationalMovies: nationalMovies.length,
+        internationalMovies: internationalMovies.length,
+        totalDirectors: uniqueDirectors.size,
+        totalFunctions: functionsData.length,
+      };
+    } catch (error) {
+      console.error("Error fetching stats:", error);
+      throw error;
+    }
   },
 
   async getMovies() {
-    await delay(400);
-    const moviesData = getFromStorage(STORAGE_KEYS.MOVIES);
-    const directorsData = getFromStorage(STORAGE_KEYS.DIRECTORS);
-    const functionsData = getFromStorage(STORAGE_KEYS.FUNCTIONS);
+    try {
+      const [moviesResponse, functionsResponse] = await Promise.all([
+        fetch(ENDPOINTS.MOVIES),
+        fetch(ENDPOINTS.FUNCTION),
+      ]);
 
-    return moviesData.map((movie) => {
-      const director = directorsData.find((d) => d.id === movie.directorId);
-      const functionsCount = functionsData.filter(
-        (f) => f.movieId === movie.id
-      ).length;
+      const moviesData = await moviesResponse.json();
+      const functionsData = await functionsResponse.json();
 
-      return {
-        ...movie,
-        directorName: director?.name,
-        nationality: director?.nationality,
-        functionsCount,
-      };
-    });
+      return moviesData.map((movie) => {
+        const functionsCount = functionsData.filter(
+          (f) => f.movieId === movie.id
+        ).length;
+
+        return {
+          ...movie,
+          directorName: movie.director?.name,
+          nationality: movie.director?.nationality,
+          functionsCount,
+        };
+      });
+    } catch (error) {
+      console.error("Error fetching movies:", error);
+      throw error;
+    }
   },
 
   async getAllFunctions() {
-    await delay(500);
-    const functionsData = getFromStorage(STORAGE_KEYS.FUNCTIONS);
-    const moviesData = getFromStorage(STORAGE_KEYS.MOVIES);
-    const directorsData = getFromStorage(STORAGE_KEYS.DIRECTORS);
+    try {
+      const functionsResponse = await fetch(ENDPOINTS.FUNCTION);
+      const functionsData = await functionsResponse.json();
 
-    return functionsData.map((func) => {
-      const movie = moviesData.find((m) => m.id === func.movieId);
-      const director = directorsData.find((d) => d.id === movie?.directorId);
-
-      return {
-        ...func,
-        movie: {
-          ...movie,
-          directorName: director?.name,
-          nationality: director?.nationality,
-        },
-      };
-    });
+      return functionsData.map((func) => {
+        return {
+          ...func,
+          movie: {
+            ...func.movie,
+            directorName: func.movie?.director?.name,
+            nationality: func.movie?.director?.nationality,
+          },
+        };
+      });
+    } catch (error) {
+      console.error("Error fetching functions:", error);
+      throw error;
+    }
   },
 
   async getMovieFunctions(movieId) {
-    await delay(300);
-    const moviesData = getFromStorage(STORAGE_KEYS.MOVIES);
-    const directorsData = getFromStorage(STORAGE_KEYS.DIRECTORS);
-    const functionsData = getFromStorage(STORAGE_KEYS.FUNCTIONS);
+    try {
+      const [moviesResponse, functionsResponse] = await Promise.all([
+        fetch(ENDPOINTS.MOVIES),
+        fetch(ENDPOINTS.FUNCTION),
+      ]);
 
-    const movie = moviesData.find((m) => m.id === parseInt(movieId));
-    if (!movie) throw new Error("Movie not found");
+      const moviesData = await moviesResponse.json();
+      const functionsData = await functionsResponse.json();
 
-    const director = directorsData.find((d) => d.id === movie.directorId);
-    const movieFunctions = functionsData.filter(
-      (f) => f.movieId === parseInt(movieId)
-    );
+      const movie = moviesData.find((m) => m.id === parseInt(movieId));
+      if (!movie) throw new Error("Movie not found");
 
-    return {
-      movie: {
-        ...movie,
-        directorName: director?.name,
-        nationality: director?.nationality,
-      },
-      functions: movieFunctions,
-      canAddMore: this.canAddMoreFunctions(movieId),
-    };
+      const movieFunctions = functionsData.filter(
+        (f) => f.movieId === parseInt(movieId)
+      );
+
+      return {
+        movie: {
+          ...movie,
+          directorName: movie.director?.name,
+          nationality: movie.director?.nationality,
+        },
+        functions: movieFunctions,
+        canAddMore: await this.canAddMoreFunctions(movieId),
+      };
+    } catch (error) {
+      console.error("Error fetching movie functions:", error);
+      throw error;
+    }
   },
 
-  canAddMoreFunctions(movieId) {
-    const moviesData = getFromStorage(STORAGE_KEYS.MOVIES);
-    const functionsData = getFromStorage(STORAGE_KEYS.FUNCTIONS);
+  async canAddMoreFunctions(movieId) {
+    try {
+      const [moviesResponse, functionsResponse] = await Promise.all([
+        fetch(ENDPOINTS.MOVIES),
+        fetch(ENDPOINTS.FUNCTION),
+      ]);
 
-    const movie = moviesData.find((m) => m.id === parseInt(movieId));
-    if (!movie) return false;
+      const moviesData = await moviesResponse.json();
+      const functionsData = await functionsResponse.json();
 
-    const currentFunctions = functionsData.filter(
-      (f) => f.movieId === parseInt(movieId)
-    );
+      const movie = moviesData.find((m) => m.id === parseInt(movieId));
+      if (!movie) return false;
 
-    if (movie.type === "national") return true;
+      const currentFunctions = functionsData.filter(
+        (f) => f.movieId === parseInt(movieId)
+      );
 
-    return currentFunctions.length < 8;
+      if (movie.type === MOVIE_ORIGIN.NATIONAL) return true;
+
+      return currentFunctions.length < 8;
+    } catch (error) {
+      console.error("Error checking function limit:", error);
+      return false;
+    }
   },
 
-  canDirectorAddFunction(directorId, date) {
-    const moviesData = getFromStorage(STORAGE_KEYS.MOVIES);
-    const functionsData = getFromStorage(STORAGE_KEYS.FUNCTIONS);
+  async canDirectorAddFunction(directorId, date) {
+    try {
+      const functionsResponse = await fetch(ENDPOINTS.FUNCTION);
+      const functionsData = await functionsResponse.json();
 
-    const directorFunctionsOnDate = functionsData.filter((func) => {
-      const movie = moviesData.find((m) => m.id === func.movieId);
-      return movie && movie.directorId === directorId && func.date === date;
-    });
+      const directorFunctionsOnDate = functionsData.filter((func) => {
+        const funcDate = new Date(func.date).toISOString().split("T")[0];
+        const checkDate = new Date(date).toISOString().split("T")[0];
+        return (
+          func.movie &&
+          func.movie.directorId === directorId &&
+          funcDate === checkDate
+        );
+      });
 
-    return directorFunctionsOnDate.length < 10;
+      return directorFunctionsOnDate.length < 10;
+    } catch (error) {
+      console.error("Error checking director function limit:", error);
+      return false;
+    }
   },
 
   async createFunction(movieId, date, time, price) {
-    await delay(400);
+    try {
+      const moviesResponse = await fetch(ENDPOINTS.MOVIES);
+      const moviesData = await moviesResponse.json();
 
-    const moviesData = getFromStorage(STORAGE_KEYS.MOVIES);
-    const functionsData = getFromStorage(STORAGE_KEYS.FUNCTIONS);
+      const movie = moviesData.find((m) => m.id === parseInt(movieId));
+      if (!movie) throw new Error("Movie not found");
 
-    const movie = moviesData.find((m) => m.id === parseInt(movieId));
-    if (!movie) throw new Error("Movie not found");
+      const canAddMore = await this.canAddMoreFunctions(movieId);
+      if (!canAddMore) {
+        const limit =
+          movie.type === MOVIE_ORIGIN.INTERNATIONAL
+            ? "8 functions"
+            : "no limit";
+        throw new Error(
+          `This ${
+            movie.type === MOVIE_ORIGIN.INTERNATIONAL
+              ? "international"
+              : "national"
+          } movie ${
+            movie.type === MOVIE_ORIGIN.INTERNATIONAL
+              ? "has already reached the limit of " + limit
+              : "should not be throwing this error"
+          }`
+        );
+      }
 
-    if (!this.canAddMoreFunctions(movieId)) {
-      const limit = movie.type === "international" ? "8 functions" : "no limit";
-      throw new Error(
-        `This ${
-          movie.type === "international" ? "international" : "national"
-        } movie ${
-          movie.type === "international"
-            ? "has already reached the limit of " + limit
-            : "should not be throwing this error"
-        }`
+      const canDirectorAdd = await this.canDirectorAddFunction(
+        movie.directorId,
+        date
       );
+      if (!canDirectorAdd) {
+        throw new Error(
+          `Director ${movie.director?.name} already has 10 functions scheduled for ${date}`
+        );
+      }
+
+      const newFunction = {
+        movieId: parseInt(movieId),
+        date,
+        time,
+        price: parseFloat(price),
+      };
+
+      const response = await fetch(ENDPOINTS.FUNCTION, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newFunction),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create function");
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error("Error creating function:", error);
+      throw error;
     }
-
-    if (!this.canDirectorAddFunction(movie.directorId, date)) {
-      const directorsData = getFromStorage(STORAGE_KEYS.DIRECTORS);
-      const director = directorsData.find((d) => d.id === movie.directorId);
-      throw new Error(
-        `Director ${director?.name} already has 10 functions scheduled for ${date}`
-      );
-    }
-
-    const newFunction = {
-      id:
-        functionsData.length > 0
-          ? Math.max(...functionsData.map((f) => f.id)) + 1
-          : 1,
-      movieId: parseInt(movieId),
-      date,
-      time,
-      price: parseFloat(price),
-    };
-
-    const updatedFunctions = [...functionsData, newFunction];
-    saveToStorage(STORAGE_KEYS.FUNCTIONS, updatedFunctions);
-
-    return newFunction;
   },
 
   async updateFunction(updatedFunction) {
-    await delay(400);
+    try {
+      const response = await fetch(
+        `${ENDPOINTS.FUNCTION}/${updatedFunction.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id: updatedFunction.id,
+            movieId: updatedFunction.movieId,
+            date: updatedFunction.date,
+            time: updatedFunction.time,
+            price: parseFloat(updatedFunction.price),
+          }),
+        }
+      );
 
-    const functionsData = getFromStorage(STORAGE_KEYS.FUNCTIONS);
-    const index = functionsData.findIndex((f) => f.id === updatedFunction.id);
+      if (!response.ok) {
+        throw new Error("Function not found");
+      }
 
-    if (index === -1) {
-      throw new Error("Function not found");
+      return await response.json();
+    } catch (error) {
+      console.error("Error updating function:", error);
+      throw error;
     }
-
-    functionsData[index] = {
-      ...functionsData[index],
-      date: updatedFunction.date,
-      time: updatedFunction.time,
-      price: parseFloat(updatedFunction.price),
-    };
-
-    saveToStorage(STORAGE_KEYS.FUNCTIONS, functionsData);
-    return functionsData[index];
   },
 
   async deleteFunction(id) {
-    await delay(400);
+    try {
+      const response = await fetch(`${ENDPOINTS.FUNCTION}/${id}`, {
+        method: "DELETE",
+      });
 
-    const functionsData = getFromStorage(STORAGE_KEYS.FUNCTIONS);
-    const index = functionsData.findIndex((f) => f.id === id);
+      if (!response.ok) {
+        throw new Error("Function not found");
+      }
 
-    if (index === -1) {
-      throw new Error("Function not found");
+      return true;
+    } catch (error) {
+      console.error("Error deleting function:", error);
+      throw error;
     }
-
-    const updatedFunctions = functionsData.filter((f) => f.id !== id);
-    saveToStorage(STORAGE_KEYS.FUNCTIONS, updatedFunctions);
-
-    return true;
   },
 
-  async resetToDefaults() {
-    await delay(200);
-    localStorage.removeItem(STORAGE_KEYS.FUNCTIONS);
-    localStorage.removeItem(STORAGE_KEYS.MOVIES);
-    localStorage.removeItem(STORAGE_KEYS.DIRECTORS);
-    initializeLocalStorage();
-    return true;
-  },
+  async exportData() {
+    try {
+      const [moviesResponse, functionsResponse] = await Promise.all([
+        fetch(ENDPOINTS.MOVIES),
+        fetch(ENDPOINTS.FUNCTION),
+      ]);
 
-  exportData() {
-    return {
-      functions: getFromStorage(STORAGE_KEYS.FUNCTIONS),
-      movies: getFromStorage(STORAGE_KEYS.MOVIES),
-      directors: getFromStorage(STORAGE_KEYS.DIRECTORS),
-    };
+      const moviesData = await moviesResponse.json();
+      const functionsData = await functionsResponse.json();
+
+      const directorsMap = new Map();
+      moviesData.forEach((movie) => {
+        if (movie.director) {
+          directorsMap.set(movie.director.id, movie.director);
+        }
+      });
+
+      return {
+        functions: functionsData,
+        movies: moviesData,
+        directors: Array.from(directorsMap.values()),
+      };
+    } catch (error) {
+      console.error("Error exporting data:", error);
+      throw error;
+    }
   },
 };
 
