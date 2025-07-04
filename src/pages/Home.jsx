@@ -6,6 +6,7 @@ import LoadingSpinner from "../components/common/LoadingSpinner.jsx";
 import HomeHeader from "../components/home/HomeHeader.jsx";
 import StatsGrid from "../components/Home/StatsGrid.jsx";
 import AdditionalInfo from "../components/Home/AdditionalInfo.jsx";
+import ServerError from "../components/common/ServerError.jsx"
 
 const Home = () => {
   const [stats, setStats] = useState(null);
@@ -34,11 +35,7 @@ const Home = () => {
 
   if (error) {
     return (
-      <div className="d-flex justify-content-center align-items-center mt-5">
-        <div className="alert alert-danger" role="alert">
-          {error}
-        </div>
-      </div>
+      <ServerError error= {error}/>
     );
   }
 

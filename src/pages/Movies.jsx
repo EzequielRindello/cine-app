@@ -2,19 +2,29 @@ import { useEffect, useState } from "react";
 import { Container, Form } from "react-bootstrap";
 import { useMovies } from "../contexts/MoviesContext";
 import MovieList from "../components/movies/MovieList";
+import ServerError from "../components/common/ServerError.jsx"
 
 const Movies = () => {
   const [filter, setFilter] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const { movies, fetchMovies } = useMovies();
 
   useEffect(() => {
     const loadMovies = async () => {
-      setIsLoading(true);
-      await fetchMovies();
-      setIsLoading(false);
+      try {
+        setIsLoading(true);
+        await fetchMovies();
+        setIsLoading(false);
+      } catch (error) {
+        setError("Error while loading movies. Please try again later.");
+        console.error("Error loading movies:", err);
+      }finally{
+        setIsLoading(false);
+      }
     };
+
     loadMovies();
   }, []);
 
@@ -25,6 +35,12 @@ const Movies = () => {
   const filteredMovies = movies.filter((movie) =>
     movie.title.toLowerCase().includes(filter.toLowerCase())
   );
+
+  if (error) {
+    return (
+      <ServerError error= {error}/>
+    );
+  }
 
   return (
     <Container className="mt-5 mb-5">
