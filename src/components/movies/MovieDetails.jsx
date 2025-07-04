@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Button, Card, Col, Row } from "react-bootstrap";
 import functionService from "../../services/functionService";
+import { formatFunctionInfo } from "../../services/formatters";
 import LoadingSpinner from "../common/LoadingSpinner";
 import FunctionModal from "../modals/FunctionModal";
 
@@ -86,9 +87,7 @@ const MovieDetails = () => {
                   {movieData.functions.length > 0 ? (
                     <ul>
                       {movieData.functions.map((func) => (
-                        <li key={func.id}>
-                          {func.date} at {func.time} - ${func.price}
-                        </li>
+                        <li key={func.id}>{formatFunctionInfo(func)}</li>
                       ))}
                     </ul>
                   ) : (
