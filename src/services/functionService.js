@@ -1,6 +1,6 @@
 import { ENDPOINTS, MOVIE_ORIGIN } from "../data/cinema.consts";
 
-// helper to get toker
+// helper to get token
 const getAuthHeaders = () => {
   const token = localStorage.getItem("token");
   return {
@@ -224,14 +224,19 @@ export const functionService = {
       const response = await fetch(ENDPOINTS.FUNCTION, {
         method: "POST",
         headers: getAuthHeaders(),
-        headers: {
-          "Content-Type": "application/json",
-        },
         body: JSON.stringify(newFunction),
       });
 
       if (!response.ok) {
-        throw new Error("Failed to create function");
+        if (response.status === 401) {
+          throw new Error(
+            "You don't have permission to add. Please log in."
+          );
+        } else if (response.status === 404) {
+          throw new Error("Function not found.");
+        } else {
+          throw new Error("Error creating function");
+        }
       }
 
       return await response.json();
@@ -247,10 +252,7 @@ export const functionService = {
         `${ENDPOINTS.FUNCTION}/${updatedFunction.id}`,
         {
           method: "PUT",
-          headers: getAuthHeaders(),
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: getAuthHeaders(), // Fixed: only one headers property
           body: JSON.stringify({
             id: updatedFunction.id,
             movieId: updatedFunction.movieId,
@@ -262,7 +264,15 @@ export const functionService = {
       );
 
       if (!response.ok) {
-        throw new Error("Function not found");
+        if (response.status === 401) {
+          throw new Error(
+            "You don't have permission to edit. Please log in."
+          );
+        } else if (response.status === 404) {
+          throw new Error("Function not found.");
+        } else {
+          throw new Error("Error updating function");
+        }
       }
 
       return await response.json();
@@ -280,7 +290,15 @@ export const functionService = {
       });
 
       if (!response.ok) {
-        throw new Error("Function not found");
+        if (response.status === 401) {
+          throw new Error(
+            "You don't have permission to delete. Please log in."
+          );
+        } else if (response.status === 404) {
+          throw new Error("Function not found.");
+        } else {
+          throw new Error("Error deleting function");
+        }
       }
 
       return true;
