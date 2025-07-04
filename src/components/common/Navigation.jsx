@@ -1,9 +1,11 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { Container, Nav, Navbar, Button } from "react-bootstrap";
+import { useAuth } from "../../contexts/AuthContext";
 
 import reactLogo from "/react-logo.png";
 
 const Navigation = () => {
+  const { token } = useAuth();
   const navigate = useNavigate();
 
   const handleLogoClick = () => {
@@ -12,6 +14,10 @@ const Navigation = () => {
 
   const handleLoginClick = () => {
     navigate("/login");
+  };
+
+  const handleAccountClick = () => {
+    navigate("/profile");
   };
 
   return (
@@ -33,9 +39,23 @@ const Navigation = () => {
             <Nav.Link as={NavLink} to="/functions">
               Functions
             </Nav.Link>
-            <Button variant="outline-light" className="ms-3" onClick={handleLoginClick}>
-              Login
-            </Button>
+            {token ? (
+              <Button
+                variant="outline-light"
+                className="ms-3"
+                onClick={handleAccountClick}
+              >
+                Account
+              </Button>
+            ) : (
+              <Button
+                variant="outline-light"
+                className="ms-3"
+                onClick={handleLoginClick}
+              >
+                Login
+              </Button>
+            )}
           </Nav>
         </Navbar.Collapse>
       </Container>
