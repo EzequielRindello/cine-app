@@ -1,7 +1,9 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Form, Button, Alert, Container, Card } from "react-bootstrap";
 import { useAuth } from "../contexts/AuthContext";
 import LoginModal from "../components/modals/LoginModal";
+import SuccessModal from "../components/modals/SuccessModal";
 
 const LoginForm = () => {
   const [formData, setFormData] = useState({
@@ -10,6 +12,10 @@ const LoginForm = () => {
   });
   const [error, setError] = useState("");
   const [showModal, setShowModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -26,8 +32,15 @@ const LoginForm = () => {
     setShowModal(true);
   };
 
-  const handleRegister = (data) => {
-    console.log("Account created:", data);
+  const handleRegister = () => {
+    setShowModal(false);
+    setSuccessMessage("Account created successfully!");
+    setShowSuccessModal(true);
+  };
+
+  const handleSuccessClose = () => {
+    setShowSuccessModal(false);
+    navigate("/");
   };
 
   const handleSubmit = async (e) => {
@@ -36,11 +49,16 @@ const LoginForm = () => {
     const { email, password } = formData;
 
     if (!email || !password) {
-      setError("Please compleate all fields");
+      setError("Please complete all fields");
       return;
     }
 
-    await login(email, password);
+    const result = await login(email, password);
+
+    if (result?.success) {
+      setSuccessMessage("Logged in successfully!");
+      setShowSuccessModal(true);
+    }
   };
 
   return (
@@ -89,6 +107,12 @@ const LoginForm = () => {
         show={showModal}
         onClose={() => setShowModal(false)}
         onRegister={handleRegister}
+      />
+
+      <SuccessModal
+        show={showSuccessModal}
+        handleClose={handleSuccessClose}
+        message={successMessage}
       />
     </>
   );

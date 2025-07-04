@@ -28,8 +28,13 @@ const LoginModal = ({ show, onClose, onRegister }) => {
       return;
     }
 
-    await register(formData);
-    onClose();
+    const result = await register(formData);
+
+    if (result?.success) {
+      onRegister();
+    } else {
+      setError("There was an error creating the account.");
+    }
   };
 
   return (

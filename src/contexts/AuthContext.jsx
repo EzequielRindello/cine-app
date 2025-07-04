@@ -15,20 +15,25 @@ export const AuthProvider = ({ children }) => {
       setUser(res.user);
       localStorage.setItem("token", res.token);
       setAuthError("");
+      return { success: true };
     } catch (err) {
       setAuthError("Invalid credentials");
+      return { success: false };
     }
   };
 
   const register = async (data) => {
-    try {
-      const res = await loginService.register(data);
-      // auto-login after registration
-      await login(data.email, data.password);
-    } catch (err) {
-      setAuthError("Registration failed");
-    }
-  };
+  try {
+    const res = await loginService.register(data);
+    // auto-login after registration
+    await login(data.email, data.password);
+    return { success: true };
+  } catch (err) {
+    setAuthError("Registration failed");
+    return { success: false };
+  }
+};
+
 
   const logout = () => {
     setToken("");
