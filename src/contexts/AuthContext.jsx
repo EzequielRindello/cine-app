@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import * as loginService from "../services/loginService";
 
 const AuthContext = createContext();
@@ -7,7 +7,40 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem("token") || "");
   const [user, setUser] = useState(null);
   const [authError, setAuthError] = useState("");
-  const [pendingAuth, setPendingAuth] = useState(null); 
+  const [pendingAuth, setPendingAuth] = useState(null);
+  const [isLoading, setIsLoading] = useState(true); 
+
+  useEffect(() => {
+    const initializeAuth = async () => {
+      const storedToken = localStorage.getItem("token");
+      const storedUser = localStorage.getItem("user");
+      
+      if (storedToken && storedUser) {
+        try {
+          const userData = JSON.parse(storedUser);
+          setToken(storedToken);
+          setUser(userData);
+          
+          await loginService.getUserById(userData.id);
+        } catch (err) {
+          console.error("Token inválido o expirado:", err);
+          
+          //if error remove credentials
+          localStorage.removeItem("token");
+          localStorage.removeItem("user");
+          setToken("");
+          setUser(null);
+        }
+      } else if (storedToken) {
+        localStorage.removeItem("token");
+        setToken("");
+      }
+      
+      setIsLoading(false);
+    };
+
+    initializeAuth();
+  }, []);
 
   const login = async (email, password) => {
     try {
@@ -32,13 +65,17 @@ export const AuthProvider = ({ children }) => {
   const completeLogin = async () => {
     if (pendingAuth) {
       setToken(pendingAuth.token);
-      setUser(pendingAuth.user);
       
       try {
-        const userData = await loginService.getUserById(pendingAuth.userId, pendingAuth.token);
+        const userData = await loginService.getUserById(pendingAuth.userId);
         setUser(userData);
+        
+        // create the local storage
+        localStorage.setItem("user", JSON.stringify(userData));
       } catch (err) {
         console.error("Error fetching user data:", err);
+        setUser(pendingAuth.user);
+        localStorage.setItem("user", JSON.stringify(pendingAuth.user));
       }
       
       setPendingAuth(null);
@@ -62,19 +99,21 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
     setPendingAuth(null);
     localStorage.removeItem("token");
+    localStorage.removeItem("user");
   };
 
   return (
     <AuthContext.Provider
-      value={{ 
-        token, 
-        user, 
-        login, 
-        register, 
-        logout, 
-        authError, 
-        completeLogin, 
-        pendingAuth 
+      value={{
+        token,
+        user,
+        login,
+        register,
+        logout,
+        authError,
+        completeLogin,
+        pendingAuth,
+        isLoading
       }}
     >
       {children}

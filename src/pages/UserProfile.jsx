@@ -1,8 +1,26 @@
-import { Container, Card, Row, Col, Alert } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import { Button, Container, Card, Row, Col, Alert } from "react-bootstrap";
 import { useAuth } from "../contexts/AuthContext";
+import LoadingSpinner from "../components/common/LoadingSpinner";
 
 const UserProfile = () => {
-  const { user } = useAuth();
+  const { user, isLoading } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () =>{
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    navigate("/");
+    window.location.reload();
+  };
+
+  if (isLoading) {
+    return (
+      <Container className="mt-4 text-center">
+        <LoadingSpinner />
+      </Container>
+    );
+  }
 
   if (!user) {
     return (
@@ -45,6 +63,7 @@ const UserProfile = () => {
           </Row>
         </Card.Body>
       </Card>
+      <Button variant="danger m-3" onClick={handleLogout}>logout</Button>
     </Container>
   );
 };
