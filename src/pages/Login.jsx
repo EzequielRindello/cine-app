@@ -19,14 +19,14 @@ const LoginForm = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
+    
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
   };
 
-  const { token, login, authError } = useAuth();
+  const { token, login, authError, completeLogin } = useAuth();
 
   const handleCreateAccount = () => {
     setShowModal(true);
@@ -40,21 +40,22 @@ const LoginForm = () => {
 
   const handleSuccessClose = () => {
     setShowSuccessModal(false);
+    completeLogin(); 
     navigate("/");
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    
     const { email, password } = formData;
-
+    
     if (!email || !password) {
       setError("Please complete all fields");
       return;
     }
-
+    
     const result = await login(email, password);
-
+    
     if (result?.success) {
       setSuccessMessage("Logged in successfully!");
       setShowSuccessModal(true);
@@ -64,7 +65,7 @@ const LoginForm = () => {
   return (
     <>
       <Container className="d-flex justify-content-center align-items-center mt-5">
-        {token ? (
+        {token && !showSuccessModal ? (
           <p>You are already logged</p>
         ) : (
           <Card className="login-form p-4 shadow mt-5">
@@ -72,7 +73,7 @@ const LoginForm = () => {
             <Form onSubmit={handleSubmit}>
               {error && <Alert variant="danger">{error}</Alert>}
               {authError && <Alert variant="danger">{authError}</Alert>}
-
+              
               <Form.Group className="mb-3" controlId="formEmail">
                 <Form.Label>Email</Form.Label>
                 <Form.Control
@@ -84,7 +85,7 @@ const LoginForm = () => {
                   required
                 />
               </Form.Group>
-
+              
               <Form.Group className="mb-3" controlId="formPassword">
                 <Form.Label>Password</Form.Label>
                 <Form.Control
@@ -96,9 +97,9 @@ const LoginForm = () => {
                   required
                 />
               </Form.Group>
-
+              
               <p onClick={handleCreateAccount}>Dont have an account?</p>
-
+              
               <Button variant="primary" type="submit" className="w-100">
                 Login
               </Button>
@@ -106,13 +107,13 @@ const LoginForm = () => {
           </Card>
         )}
       </Container>
-
+      
       <LoginModal
         show={showModal}
         onClose={() => setShowModal(false)}
         onRegister={handleRegister}
       />
-
+      
       <SuccessModal
         show={showSuccessModal}
         handleClose={handleSuccessClose}
