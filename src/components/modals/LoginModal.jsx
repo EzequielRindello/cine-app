@@ -11,7 +11,7 @@ const LoginModal = ({ show, onClose, onRegister }) => {
   });
   const [error, setError] = useState("");
 
-  const { register, authError } = useAuth();
+  const { register } = useAuth();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -44,7 +44,6 @@ const LoginModal = ({ show, onClose, onRegister }) => {
       </Modal.Header>
       <Modal.Body>
         {error && <Alert variant="danger">{error}</Alert>}
-        {authError && <Alert variant="danger">{authError}</Alert>}
         <Form>
           <Form.Group className="mb-3">
             <Form.Label>First Name</Form.Label>
