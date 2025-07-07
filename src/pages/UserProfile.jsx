@@ -1,17 +1,18 @@
 import { useNavigate } from "react-router-dom";
-import { Button, Container, Card, Row, Col, Alert } from "react-bootstrap";
+import { Button, Container, Alert } from "react-bootstrap";
 import { useAuth } from "../contexts/AuthContext";
 import LoadingSpinner from "../components/common/LoadingSpinner";
+import ProfileCard from "../components/login/ProfileCard.jsx";
 
 const UserProfile = () => {
-  const { user, isLoading } = useAuth();
+  const { user, isLoading, logout } = useAuth();
   const navigate = useNavigate();
 
-  const handleLogout = () =>{
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+  const handleLogout = () => {
+    logout();
     navigate("/");
     window.location.reload();
+    alert("You have been logged out successfully.");
   };
 
   if (isLoading) {
@@ -32,38 +33,10 @@ const UserProfile = () => {
 
   return (
     <Container className="mt-4">
-      <Card>
-        <Card.Header>
-          <h4>User Profile</h4>
-        </Card.Header>
-        <Card.Body>
-          <Row className="mb-3">
-            <Col md={4}>
-              <strong>First Name:</strong>
-            </Col>
-            <Col md={8}>{user.firstName}</Col>
-          </Row>
-          <Row className="mb-3">
-            <Col md={4}>
-              <strong>Last Name:</strong>
-            </Col>
-            <Col md={8}>{user.lastName}</Col>
-          </Row>
-          <Row className="mb-3">
-            <Col md={4}>
-              <strong>Email:</strong>
-            </Col>
-            <Col md={8}>{user.email}</Col>
-          </Row>
-          <Row className="mb-3">
-            <Col md={4}>
-              <strong>ID:</strong>
-            </Col>
-            <Col md={8}>{user.id}</Col>
-          </Row>
-        </Card.Body>
-      </Card>
-      <Button variant="danger m-3" onClick={handleLogout}>logout</Button>
+      <ProfileCard user={user} />
+      <Button variant="danger m-3" onClick={handleLogout}>
+        logout
+      </Button>
     </Container>
   );
 };
