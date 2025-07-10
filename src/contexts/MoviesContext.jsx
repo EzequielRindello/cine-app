@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState } from "react";
 import { functionService } from "../services/functionService";
 
 const MoviesContext = createContext();
@@ -12,10 +12,6 @@ export const MoviesProvider = ({ children }) => {
     const data = await functionService.getMovies();
     setMovies(data);
   };
-
-  useEffect(() => {
-    fetchMovies();
-  }, []);
 
   return (
     <MoviesContext.Provider

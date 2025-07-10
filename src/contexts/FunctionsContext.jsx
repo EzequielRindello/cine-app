@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState } from "react";
 import { functionService } from "../services/functionService";
 
 const FunctionsContext = createContext();
@@ -70,10 +70,6 @@ export const FunctionsProvider = ({ children }) => {
       throw error;
     }
   };
-
-  useEffect(() => {
-    fetchFunctions();
-  }, []);
 
   const value = {
     functions,
