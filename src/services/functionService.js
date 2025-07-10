@@ -81,16 +81,15 @@ export const functionService = {
       const functionsResponse = await fetch(ENDPOINTS.FUNCTION);
       const functionsData = await functionsResponse.json();
 
-      return functionsData.map((func) => {
-        return {
-          ...func,
-          movie: {
-            ...func.movie,
-            directorName: func.movie?.director?.name,
-            nationality: func.movie?.director?.nationality,
-          },
-        };
-      });
+      // Since the API already returns the movie with director info, no need to transform
+      return functionsData.map((func) => ({
+        ...func,
+        movie: {
+          ...func.movie,
+          directorName: func.movie?.director?.name,
+          nationality: func.movie?.director?.nationality,
+        },
+      }));
     } catch (error) {
       console.error("Error fetching functions:", error);
       throw error;
@@ -106,7 +105,9 @@ export const functionService = {
         (f) => f.movieId === parseInt(movieId)
       );
 
-      if (movieFunctions.length === 0) throw new Error("No functions found for this movie");
+      if (movieFunctions.length === 0) {
+        throw new Error("No functions found for this movie");
+      }
 
       const movie = movieFunctions[0].movie;
 
@@ -127,24 +128,33 @@ export const functionService = {
 
   async canAddMoreFunctions(movieId) {
     try {
-      const [moviesResponse, functionsResponse] = await Promise.all([
-        fetch(ENDPOINTS.MOVIES),
-        fetch(ENDPOINTS.FUNCTION),
-      ]);
-
-      const moviesData = await moviesResponse.json();
+      const functionsResponse = await fetch(ENDPOINTS.FUNCTION);
       const functionsData = await functionsResponse.json();
 
-      const movie = moviesData.find((m) => m.id === parseInt(movieId));
-      if (!movie) return false;
-
-      const currentFunctions = functionsData.filter(
+      // Get movie info from the first function (since we know functions exist)
+      const movieFunctions = functionsData.filter(
         (f) => f.movieId === parseInt(movieId)
       );
 
+      if (movieFunctions.length === 0) {
+        // If no functions exist, we need to fetch the movie to check its type
+        const moviesResponse = await fetch(ENDPOINTS.MOVIES);
+        const moviesData = await moviesResponse.json();
+        const movie = moviesData.find((m) => m.id === parseInt(movieId));
+        
+        if (!movie) return false;
+        
+        // If it's national, unlimited functions allowed
+        return movie.type === MOVIE_ORIGIN.NATIONAL;
+      }
+
+      const movie = movieFunctions[0].movie;
+      
+      // National movies have no limit
       if (movie.type === MOVIE_ORIGIN.NATIONAL) return true;
 
-      return currentFunctions.length < 8;
+      // International movies are limited to 8 functions
+      return movieFunctions.length < 8;
     } catch (error) {
       console.error("Error checking function limit:", error);
       return false;
@@ -175,30 +185,25 @@ export const functionService = {
 
   async createFunction(movieId, date, time, price) {
     try {
-      const moviesResponse = await fetch(ENDPOINTS.MOVIES);
-      const moviesData = await moviesResponse.json();
-
-      const movie = moviesData.find((m) => m.id === parseInt(movieId));
-      if (!movie) throw new Error("Movie not found");
-
+      // check if we can add more functions before creating
       const canAddMore = await this.canAddMoreFunctions(movieId);
       if (!canAddMore) {
-        const limit =
-          movie.type === MOVIE_ORIGIN.INTERNATIONAL
-            ? "8 functions"
-            : "no limit";
-        throw new Error(
-          `This ${
-            movie.type === MOVIE_ORIGIN.INTERNATIONAL
-              ? "international"
-              : "national"
-          } movie ${
-            movie.type === MOVIE_ORIGIN.INTERNATIONAL
-              ? "has already reached the limit of " + limit
-              : "should not be throwing this error"
-          }`
-        );
+        const moviesResponse = await fetch(ENDPOINTS.MOVIES);
+        const moviesData = await moviesResponse.json();
+        const movie = moviesData.find((m) => m.id === parseInt(movieId));
+        
+        if (movie?.type === MOVIE_ORIGIN.INTERNATIONAL) {
+          throw new Error("This international movie has already reached the limit of 8 functions");
+        }
+        throw new Error("Cannot add more functions for this movie");
       }
+
+      // get movie info to check director limit
+      const moviesResponse = await fetch(ENDPOINTS.MOVIES);
+      const moviesData = await moviesResponse.json();
+      const movie = moviesData.find((m) => m.id === parseInt(movieId));
+      
+      if (!movie) throw new Error("Movie not found");
 
       const canDirectorAdd = await this.canDirectorAddFunction(
         movie.directorId,
@@ -225,9 +230,7 @@ export const functionService = {
 
       if (!response.ok) {
         if (response.status === 401) {
-          throw new Error(
-            "You don't have permission to add. Please log in."
-          );
+          throw new Error("You don't have permission to add. Please log in.");
         } else if (response.status === 404) {
           throw new Error("Function not found.");
         } else {
@@ -248,7 +251,7 @@ export const functionService = {
         `${ENDPOINTS.FUNCTION}/${updatedFunction.id}`,
         {
           method: "PUT",
-          headers: getAuthHeaders(), // Fixed: only one headers property
+          headers: getAuthHeaders(),
           body: JSON.stringify({
             id: updatedFunction.id,
             movieId: updatedFunction.movieId,
@@ -261,9 +264,7 @@ export const functionService = {
 
       if (!response.ok) {
         if (response.status === 401) {
-          throw new Error(
-            "You don't have permission to edit. Please log in."
-          );
+          throw new Error("You don't have permission to edit. Please log in.");
         } else if (response.status === 404) {
           throw new Error("Function not found.");
         } else {
@@ -287,9 +288,7 @@ export const functionService = {
 
       if (!response.ok) {
         if (response.status === 401) {
-          throw new Error(
-            "You don't have permission to delete. Please log in."
-          );
+          throw new Error("You don't have permission to delete. Please log in.");
         } else if (response.status === 404) {
           throw new Error("Function not found.");
         } else {
@@ -304,33 +303,6 @@ export const functionService = {
     }
   },
 
-  async exportData() {
-    try {
-      const [moviesResponse, functionsResponse] = await Promise.all([
-        fetch(ENDPOINTS.MOVIES),
-        fetch(ENDPOINTS.FUNCTION),
-      ]);
-
-      const moviesData = await moviesResponse.json();
-      const functionsData = await functionsResponse.json();
-
-      const directorsMap = new Map();
-      moviesData.forEach((movie) => {
-        if (movie.director) {
-          directorsMap.set(movie.director.id, movie.director);
-        }
-      });
-
-      return {
-        functions: functionsData,
-        movies: moviesData,
-        directors: Array.from(directorsMap.values()),
-      };
-    } catch (error) {
-      console.error("Error exporting data:", error);
-      throw error;
-    }
-  },
 };
 
 export default functionService;
