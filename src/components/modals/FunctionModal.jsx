@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { useFunctions } from "../../contexts/FunctionsContext";
 import { MODAL_MODES } from "../../data/cinema.consts";
@@ -14,27 +14,25 @@ const FunctionModal = ({
   movieId,
   onSuccess,
 }) => {
-  const [formData, setFormData] = useState({ date: "", time: "", price: "" });
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [error, setError] = useState(null);
   const today = new Date().toISOString().split("T")[0];
+  const [formData, setFormData] = useState(() => {
+  if (mode === MODAL_MODES.EDIT && func) {
+    return {
+      date: func.date,
+      time: func.time,
+      price: func.price,
+    };
+  } else {
+    return { date: "", time: "", price: "" };
+  }
+});
+
 
   const { addFunction, editFunction, deleteFunction } = useFunctions();
-
-  useEffect(() => {
-    setError(null);
-    if (mode === MODAL_MODES.EDIT && func) {
-      setFormData({
-        date: func.date,
-        time: func.time,
-        price: func.price,
-      });
-    } else {
-      setFormData({ date: "", time: "", price: "" });
-    }
-  }, [mode, func, show]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
