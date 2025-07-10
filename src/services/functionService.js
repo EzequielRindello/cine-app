@@ -105,17 +105,23 @@ export const functionService = {
         (f) => f.movieId === parseInt(movieId)
       );
 
-      if (movieFunctions.length === 0) {
-        throw new Error("No functions found for this movie");
+      let movie;
+
+      if (movieFunctions.length > 0) {
+        movie = movieFunctions[0].movie;
+      } else {
+        const moviesResponse = await fetch(ENDPOINTS.MOVIES);
+        const moviesData = await moviesResponse.json();
+        movie = moviesData.find((m) => m.id === parseInt(movieId));
       }
 
-      const movie = movieFunctions[0].movie;
+      if (!movie) throw new Error("Movie not found");
 
       return {
         movie: {
           ...movie,
           directorName: movie.director?.name,
-          nationality: movie.director?.nationality, 
+          nationality: movie.director?.nationality,
         },
         functions: movieFunctions,
         canAddMore: await this.canAddMoreFunctions(movieId),
@@ -131,29 +137,24 @@ export const functionService = {
       const functionsResponse = await fetch(ENDPOINTS.FUNCTION);
       const functionsData = await functionsResponse.json();
 
-      // Get movie info from the first function (since we know functions exist)
       const movieFunctions = functionsData.filter(
         (f) => f.movieId === parseInt(movieId)
       );
 
-      if (movieFunctions.length === 0) {
-        // If no functions exist, we need to fetch the movie to check its type
+      let movie;
+
+      if (movieFunctions.length > 0) {
+        movie = movieFunctions[0].movie;
+      } else {
         const moviesResponse = await fetch(ENDPOINTS.MOVIES);
         const moviesData = await moviesResponse.json();
-        const movie = moviesData.find((m) => m.id === parseInt(movieId));
-        
-        if (!movie) return false;
-        
-        // If it's national, unlimited functions allowed
-        return movie.type === MOVIE_ORIGIN.NATIONAL;
+        movie = moviesData.find((m) => m.id === parseInt(movieId));
       }
 
-      const movie = movieFunctions[0].movie;
-      
-      // National movies have no limit
+      if (!movie) return false;
+
       if (movie.type === MOVIE_ORIGIN.NATIONAL) return true;
 
-      // International movies are limited to 8 functions
       return movieFunctions.length < 8;
     } catch (error) {
       console.error("Error checking function limit:", error);
