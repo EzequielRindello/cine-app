@@ -1,0 +1,155 @@
+body {
+  font-family: "Work Sans", sans-serif;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #12100d;
+  color: #fff;
+}
+
+.main-content {
+  flex: 1;
+}
+
+p,
+h6 {
+  color: #e0e0e0;
+}
+
+/* header styles */
+.main-navbar {
+  background-color: #12100d;
+  padding: 1rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+.nav-title {
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.react-logo {
+  width: 24px;
+  height: 24px;
+}
+.nav-title:hover {
+  color: #fff;
+  cursor: pointer;
+}
+.nav-links .nav-link {
+  color: #f7f6f5;
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+.nav-links .nav-link:hover {
+  color: #dd0000;
+}
+.nav-links .nav-link.active {
+  color: #fff;
+  font-weight: bold;
+  text-decoration: none;
+  border-bottom: 1px solid #fff;
+  padding-bottom: 0px;
+}
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 30 30'%3e%3cpath stroke='%23ffffff' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22' /%3e%3c/svg%3e");
+}
+.navbar-toggler {
+  border-color: #12100d;
+}
+
+/* home styles */
+.card {
+  color: #fff;
+  background-color: #23211e;
+}
+.stats-card h2 {
+  font-weight: bold;
+  color: #dd0000;
+}
+.card-header {
+  background-color: #12100d;
+  color: #fff;
+}
+.card p,
+.card-subtitle {
+  color: #e0e0e0;
+}
+.call-to-action-link {
+  cursor: pointer;
+  text-decoration: none;
+  font-style: italic;
+}
+.call-to-action-link:hover {
+  text-decoration: underline;
+}
+
+/* movies styles */
+.movie-poster {
+  height: 250px;
+  object-fit: cover;
+}
+
+/* login styles */
+.login-form{
+  min-width: 50vh;
+}
+.login-form p{
+  font-style: italic;
+  
+}
+.login-form p:hover{
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* modal styles */
+.modal-edit-function,
+.modal-add-function,
+.modal-error,
+.modal-success {
+  border-radius: 0.5rem !important;
+  outline: solid 1px #23211e !important;
+}
+.modal-add-function {
+  background-color: #23211e;
+}
+.modal-header {
+  background-color: #12100d;
+  color: #fff;
+  border-radius: 0%;
+}
+.modal-body,
+.modal-footer {
+  color: #fff;
+  background-color: #23211e;
+}
+
+/* spinner */
+.sipnner {
+  color: #12100d;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* footer styles*/
+.main-footer {
+  background-color: #12100d;
+  color: #fff;
+  position: relative;
+  bottom: 0;
+  width: 100%;
+  padding: 1rem 0;
+  text-align: center;
+  z-index: 1000;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  margin-top: auto;
+}

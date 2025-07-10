@@ -1,0 +1,19 @@
+import { Button, Modal } from "react-bootstrap";
+
+const SuccessModal = ({ show, handleClose, message }) => (
+  <Modal className="modal-success" show={show} onHide={handleClose} centered>
+    <Modal.Header closeButton closeVariant="white">
+      <Modal.Title>Success</Modal.Title>
+    </Modal.Header>
+    <Modal.Body>
+      {message}
+      <br />
+      <br />
+      <Button variant="success" onClick={handleClose}>
+        OK
+      </Button>
+    </Modal.Body>
+  </Modal>
+);
+
+export default SuccessModal;
