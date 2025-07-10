@@ -23,6 +23,15 @@ export const FunctionsProvider = ({ children }) => {
     }
   };
 
+  const getMovieFunctions = async (movieId) => {
+    try {
+      return await functionService.getMovieFunctions(movieId);
+    } catch (error) {
+      console.error("Error getting movie functions:", error);
+      throw error;
+    }
+  };
+
   const addFunction = async (movieId, date, time, price) => {
     try {
       await functionService.createFunction(movieId, date, time, price);
@@ -62,15 +71,6 @@ export const FunctionsProvider = ({ children }) => {
     }
   };
 
-  const getMovies = async () => {
-    try {
-      return await functionService.getMovies();
-    } catch (error) {
-      console.error("Error getting movies:", error);
-      throw error;
-    }
-  };
-
   const value = {
     functions,
     fetchFunctions,
@@ -78,7 +78,7 @@ export const FunctionsProvider = ({ children }) => {
     editFunction,
     deleteFunction,
     getStats,
-    getMovies,
+    getMovieFunctions,
   };
 
   return (

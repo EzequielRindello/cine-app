@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Button, Card, Col, Row } from "react-bootstrap";
-import functionService from "../../services/functionService";
 import { formatFunctionInfo } from "../../services/formatters";
+import { useFunctions } from "../../contexts/FunctionsContext"; 
 import LoadingSpinner from "../common/LoadingSpinner";
 import FunctionModal from "../modals/FunctionModal";
 
@@ -12,12 +12,13 @@ const MovieDetails = () => {
   const [isLoading, setIsLoading] = useState(true);
   const { id } = useParams();
   const navigate = useNavigate();
+  const { getMovieFunctions } = useFunctions();
 
   useEffect(() => {
     const fetchDetails = async () => {
       try {
         setIsLoading(true);
-        const res = await functionService.getMovieFunctions(id);
+        const res = await await getMovieFunctions(id);
         setMovieData(res);
         setIsLoading(false);
       } catch (err) {

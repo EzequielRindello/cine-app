@@ -99,26 +99,22 @@ export const functionService = {
 
   async getMovieFunctions(movieId) {
     try {
-      const [moviesResponse, functionsResponse] = await Promise.all([
-        fetch(ENDPOINTS.MOVIES),
-        fetch(ENDPOINTS.FUNCTION),
-      ]);
-
-      const moviesData = await moviesResponse.json();
+      const functionsResponse = await fetch(ENDPOINTS.FUNCTION);
       const functionsData = await functionsResponse.json();
-
-      const movie = moviesData.find((m) => m.id === parseInt(movieId));
-      if (!movie) throw new Error("Movie not found");
 
       const movieFunctions = functionsData.filter(
         (f) => f.movieId === parseInt(movieId)
       );
 
+      if (movieFunctions.length === 0) throw new Error("No functions found for this movie");
+
+      const movie = movieFunctions[0].movie;
+
       return {
         movie: {
           ...movie,
           directorName: movie.director?.name,
-          nationality: movie.director?.nationality,
+          nationality: movie.director?.nationality, 
         },
         functions: movieFunctions,
         canAddMore: await this.canAddMoreFunctions(movieId),
