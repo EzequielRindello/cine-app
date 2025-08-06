@@ -14,4 +14,8 @@ export const ENDPOINTS = {
   AUTH_LOGIN: "https://localhost:7063/api/Auth/login",
   AUTH_REGISTER: "https://localhost:7063/api/Auth/register",
   AUTH_USER: "https://localhost:7063/api/Auth/user",
+  AUTH_USERS: "https://localhost:7063/api/auth/users",
+  AUTH_USERS_BY_ID: "https://localhost:7063/api/auth/users",
+  RESERVATIONS: "https://localhost:7063/api/reservation",
+  MY_RESERVATIONS: "https://localhost:7063/api/reservation/my-reservations",
 };
