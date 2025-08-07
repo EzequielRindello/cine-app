@@ -1,12 +1,18 @@
 import { ENDPOINTS } from "../data/cinema.consts";
 
-// helper to get token
+// helpers
 const getAuthHeaders = () => {
   const token = localStorage.getItem("token");
   return {
     "Content-Type": "application/json",
     ...(token && { Authorization: `Bearer ${token}` }),
   };
+};
+
+const roleMap = {
+  User: 1,
+  CineAdmin: 2,
+  SysAdmin: 3,
 };
 
 export const login = async (email, password) => {
@@ -67,10 +73,15 @@ export const getAllUsers = async () => {
 };
 
 export const createUser = async (userData) => {
+  const payload = {
+    ...userData,
+    role: typeof userData.role === "string" ? roleMap[userData.role] : userData.role,
+  };
+
   const response = await fetch(ENDPOINTS.AUTH_USERS, {
     method: "POST",
     headers: getAuthHeaders(),
-    body: JSON.stringify(userData),
+    body: JSON.stringify(payload),
   });
 
   if (!response.ok) {
@@ -82,10 +93,15 @@ export const createUser = async (userData) => {
 };
 
 export const updateUser = async (id, userData) => {
+  const payload = {
+    ...userData,
+    role: typeof userData.role === "string" ? roleMap[userData.role] : userData.role,
+  };
+
   const response = await fetch(`${ENDPOINTS.AUTH_USERS_BY_ID}/${id}`, {
     method: "PUT",
     headers: getAuthHeaders(),
-    body: JSON.stringify(userData),
+    body: JSON.stringify(payload),
   });
 
   if (!response.ok) {

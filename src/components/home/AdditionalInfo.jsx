@@ -16,14 +16,16 @@ const AdditionalInfo = () => (
                 <li>• International films: maximum 8 functions</li>
                 <li>• National films: unlimited</li>
                 <li>• Directors: max. 10 functions per day</li>
+                <li>• User: max. 4 reservations per day</li>
               </ul>
             </div>
             <div>
               <p><strong>System Workflow:</strong></p>
               <ul className="list-unstyled">
-                <li>• Movies: see all available movies</li>
-                <li>• Movie details: see details and create a new function</li>
+                <li>• Movies: see all available movies. Add new movies</li>
+                <li>• Movie details: see details and create a new functions</li>
                 <li>• Functions: search and manage existing functions</li>
+                <li>• Users: search and manage existing users</li>
               </ul>
             </div>
           </div>

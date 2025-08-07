@@ -19,6 +19,10 @@ h6 {
   color: #e0e0e0;
 }
 
+.modal-header .btn-close {
+  filter: invert(1);
+}
+
 /* header styles */
 .main-navbar {
   background-color: #12100d;

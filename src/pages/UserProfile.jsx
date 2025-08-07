@@ -9,7 +9,7 @@ import MyReservations from "../components/user/MyReservations.jsx";
 
 const UserProfile = () => {
   const { user, isLoading, logout } = useAuth();
-  const { isSysAdmin, isUser } = useRole();
+  const { isSysAdmin, isCineAdmin, isUser, isAdminOrAbove } = useRole();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -53,6 +53,16 @@ const UserProfile = () => {
             </div>
           )}
 
+          {isCineAdmin() && (
+            <div>
+              <h3>CineAdmin Profile</h3>
+              <Alert className="mt-3" variant="warning">
+                CineAdmin accounts cannot be modified directly. Please contact a
+                SysAdmin for any changes.
+              </Alert>
+            </div>
+          )}
+
           {isUser() && (
             <div>
               <h3>My Reservations</h3>
@@ -61,6 +71,11 @@ const UserProfile = () => {
           )}
         </Col>
       </Row>
+      {isAdminOrAbove() && (
+        <div className="mt-4">
+          <h3>Add a movie</h3>
+        </div>
+      )}
     </Container>
   );
 };

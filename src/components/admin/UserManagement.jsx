@@ -1,13 +1,16 @@
 import { useState, useEffect } from "react";
-import { Table, Button, Modal, Form, Alert } from "react-bootstrap";
+import { Table, Button } from "react-bootstrap";
 import * as loginService from "../../services/loginService";
+
+import DismissableAlert from "../modals/DismissableAlert";
+import CreateEditUserModal from "../modals/CreateEditUserModal";
+import DeleteUserModal from "../modals/DeleteUserModal";
 
 const UserManagement = () => {
   const [users, setUsers] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -17,9 +20,18 @@ const UserManagement = () => {
     role: "User",
   });
 
+  const [alert, setAlert] = useState(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [userToDelete, setUserToDelete] = useState(null);
+
   useEffect(() => {
     loadUsers();
   }, []);
+
+  const showAlert = (type, message, duration = 4000) => {
+    setAlert({ type, message });
+    setTimeout(() => setAlert(null), duration);
+  };
 
   const loadUsers = async () => {
     try {
@@ -27,7 +39,7 @@ const UserManagement = () => {
       const usersData = await loginService.getAllUsers();
       setUsers(usersData);
     } catch (err) {
-      setError("Failed to load users");
+      showAlert("danger", "Failed to load users");
       console.error(err);
     } finally {
       setLoading(false);
@@ -40,23 +52,29 @@ const UserManagement = () => {
       if (editingUser) {
         const { password, ...updateData } = formData;
         await loginService.updateUser(editingUser.id, updateData);
+        showAlert("success", "User updated successfully");
       } else {
         await loginService.createUser(formData);
+        showAlert("success", "User created successfully");
       }
 
       setShowModal(false);
       setEditingUser(null);
-      setFormData({
-        firstName: "",
-        lastName: "",
-        email: "",
-        password: "",
-        role: "User",
-      });
+      resetForm();
       await loadUsers();
     } catch (err) {
-      setError(err.message);
+      showAlert("danger", err.message || "Error saving user");
     }
+  };
+
+  const resetForm = () => {
+    setFormData({
+      firstName: "",
+      lastName: "",
+      email: "",
+      password: "",
+      role: "User",
+    });
   };
 
   const handleEdit = (user) => {
@@ -71,14 +89,23 @@ const UserManagement = () => {
     setShowModal(true);
   };
 
-  const handleDelete = async (userId) => {
-    if (window.confirm("Are you sure you want to delete this user?")) {
-      try {
-        await loginService.deleteUser(userId);
-        await loadUsers();
-      } catch (err) {
-        setError(err.message);
-      }
+  const confirmDelete = (user) => {
+    setUserToDelete(user);
+    setShowDeleteModal(true);
+  };
+
+  const handleDelete = async () => {
+    if (!userToDelete) return;
+
+    try {
+      await loginService.deleteUser(userToDelete.id);
+      showAlert("success", "User deleted");
+      await loadUsers();
+    } catch (err) {
+      showAlert("danger", err.message || "Error deleting user");
+    } finally {
+      setShowDeleteModal(false);
+      setUserToDelete(null);
     }
   };
 
@@ -91,7 +118,7 @@ const UserManagement = () => {
 
   return (
     <div>
-      {error && <Alert variant="danger">{error}</Alert>}
+      <DismissableAlert type={alert?.type} message={alert?.message} />
 
       <div className="d-flex justify-content-between mb-3">
         <p>Please be aware that some actions are irreversible.</p>
@@ -132,7 +159,7 @@ const UserManagement = () => {
                   <Button
                     variant="danger"
                     size="sm"
-                    onClick={() => handleDelete(user.id)}
+                    onClick={() => confirmDelete(user)}
                   >
                     Delete
                   </Button>
@@ -143,81 +170,25 @@ const UserManagement = () => {
         </Table>
       )}
 
-      <Modal show={showModal} onHide={() => setShowModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>{editingUser ? "Edit User" : "Create User"}</Modal.Title>
-        </Modal.Header>
-        <Form onSubmit={handleSubmit}>
-          <Modal.Body>
-            <Form.Group className="mb-3">
-              <Form.Label>First Name</Form.Label>
-              <Form.Control
-                type="text"
-                name="firstName"
-                value={formData.firstName}
-                onChange={handleInputChange}
-                required
-              />
-            </Form.Group>
+      <CreateEditUserModal
+        show={showModal}
+        onHide={() => {
+          setShowModal(false);
+          setEditingUser(null);
+          resetForm();
+        }}
+        onSubmit={handleSubmit}
+        formData={formData}
+        onChange={handleInputChange}
+        editingUser={editingUser}
+      />
 
-            <Form.Group className="mb-3">
-              <Form.Label>Last Name</Form.Label>
-              <Form.Control
-                type="text"
-                name="lastName"
-                value={formData.lastName}
-                onChange={handleInputChange}
-                required
-              />
-            </Form.Group>
-
-            <Form.Group className="mb-3">
-              <Form.Label>Email</Form.Label>
-              <Form.Control
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleInputChange}
-                required
-              />
-            </Form.Group>
-
-            {!editingUser && (
-              <Form.Group className="mb-3">
-                <Form.Label>Password</Form.Label>
-                <Form.Control
-                  type="password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleInputChange}
-                  required
-                />
-              </Form.Group>
-            )}
-
-            <Form.Group className="mb-3">
-              <Form.Label>Role</Form.Label>
-              <Form.Select
-                name="role"
-                value={formData.role}
-                onChange={handleInputChange}
-              >
-                <option value="User">User</option>
-                <option value="CineAdmin">Cinema Admin</option>
-                <option value="SysAdmin">System Admin</option>
-              </Form.Select>
-            </Form.Group>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={() => setShowModal(false)}>
-              Cancel
-            </Button>
-            <Button variant="primary" type="submit">
-              {editingUser ? "Update" : "Create"}
-            </Button>
-          </Modal.Footer>
-        </Form>
-      </Modal>
+      <DeleteUserModal
+        show={showDeleteModal}
+        onHide={() => setShowDeleteModal(false)}
+        onConfirm={handleDelete}
+        user={userToDelete}
+      />
     </div>
   );
 };
