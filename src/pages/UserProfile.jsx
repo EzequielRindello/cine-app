@@ -5,6 +5,7 @@ import { useRole } from "../hooks/userRole.js";
 import LoadingSpinner from "../components/common/LoadingSpinner";
 import ProfileCard from "../components/login/ProfileCard.jsx";
 import UserManagement from "../components/admin/UserManagement.jsx";
+import MovieManagment from "../components/admin/MovieManagment.jsx";
 import MyReservations from "../components/user/MyReservations.jsx";
 
 const UserProfile = () => {
@@ -72,8 +73,8 @@ const UserProfile = () => {
         </Col>
       </Row>
       {isAdminOrAbove() && (
-        <div className="mt-4">
-          <h3>Add a movie</h3>
+        <div className="my-5">
+          <MovieManagment />
         </div>
       )}
     </Container>

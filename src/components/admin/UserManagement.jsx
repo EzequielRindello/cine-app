@@ -4,6 +4,7 @@ import * as loginService from "../../services/loginService";
 
 import DismissableAlert from "../modals/DismissableAlert";
 import CreateEditUserModal from "../modals/CreateEditUserModal";
+import LoadingSpinner from '../common/LoadingSpinner';
 import DeleteUserModal from "../modals/DeleteUserModal";
 
 const UserManagement = () => {
@@ -128,7 +129,7 @@ const UserManagement = () => {
       </div>
 
       {loading ? (
-        <p>Loading...</p>
+        <LoadingSpinner />
       ) : (
         <Table striped bordered hover>
           <thead>

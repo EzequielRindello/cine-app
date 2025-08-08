@@ -10,6 +10,7 @@ export const MODAL_MODES = {
 
 export const ENDPOINTS = {
   MOVIES: "https://localhost:7063/api/Movies",
+  DIRECTORS: "https://localhost:7063/api/Directors",
   FUNCTION: "https://localhost:7063/api/Functions",
   AUTH_LOGIN: "https://localhost:7063/api/Auth/login",
   AUTH_REGISTER: "https://localhost:7063/api/Auth/register",
