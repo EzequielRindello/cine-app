@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
-import { Table, Alert, Card, Button, Modal, Form } from "react-bootstrap";
-import { useAuth } from "../../contexts/AuthContext";
+import { Alert, Card, Button, Modal, Form } from "react-bootstrap";
 import * as reservationService from "../../services/reservationsService";
 
 const MyReservations = () => {
@@ -10,7 +9,8 @@ const MyReservations = () => {
   const [showModal, setShowModal] = useState(false);
   const [editingReservation, setEditingReservation] = useState(null);
   const [newTicketQuantity, setNewTicketQuantity] = useState(1);
-  const { user } = useAuth();
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [reservationToCancel, setReservationToCancel] = useState(null);
 
   useEffect(() => {
     loadMyReservations();
@@ -64,16 +64,22 @@ const MyReservations = () => {
     }
   };
 
-  const handleCancel = async (reservationId) => {
-    if (window.confirm("Are you sure you want to cancel this reservation?")) {
-      try {
-        await reservationService.cancelReservation(reservationId);
-        await loadMyReservations();
-        setError("");
-      } catch (err) {
-        setError(err.message);
-      }
+  const handleCancel = async () => {
+    try {
+      await reservationService.cancelReservation(reservationToCancel.id);
+      await loadMyReservations();
+      setError("");
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setShowCancelModal(false);
+      setReservationToCancel(null);
     }
+  };
+
+  const confirmCancel = (reservation) => {
+    setReservationToCancel(reservation);
+    setShowCancelModal(true);
   };
 
   const canModifyReservation = (reservation) => {
@@ -129,7 +135,7 @@ const MyReservations = () => {
                     <Button
                       variant="danger"
                       size="sm"
-                      onClick={() => handleCancel(reservation.id)}
+                      onClick={() => confirmCancel(reservation)}
                     >
                       Cancel Reservation
                     </Button>
@@ -211,10 +217,28 @@ const MyReservations = () => {
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowModal(false)}>
-            Cancel Reservation
+            Cancel
           </Button>
           <Button variant="primary" onClick={handleUpdate}>
             Update Reservation
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      <Modal show={showCancelModal} onHide={() => setShowCancelModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Cancellation</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Are you sure you want to cancel this reservation? <br />
+          <strong>This action cannot be undone.</strong>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowCancelModal(false)}>
+            No, go back
+          </Button>
+          <Button variant="danger" onClick={handleCancel}>
+            Yes, cancel reservation
           </Button>
         </Modal.Footer>
       </Modal>
