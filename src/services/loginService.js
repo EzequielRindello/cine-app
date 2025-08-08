@@ -1,4 +1,4 @@
-import { ENDPOINTS } from "../data/cinema.consts";
+import { ENDPOINTS, LOGIN_ERRORS } from "../data/cinema.consts";
 
 // helpers
 const getAuthHeaders = () => {
@@ -24,7 +24,7 @@ export const login = async (email, password) => {
     body: JSON.stringify({ email, password }),
   });
 
-  if (!response.ok) throw new Error("Login failed");
+  if (!response.ok) throw new Error(LOGIN_ERRORS.LOGIN_FAILED);
 
   return await response.json();
 };
@@ -38,7 +38,7 @@ export const register = async (data) => {
     body: JSON.stringify(data),
   });
 
-  if (!response.ok) throw new Error("Registration failed");
+  if (!response.ok) throw new Error(LOGIN_ERRORS.REGISTRATION_FAILED);
 
   return await response.json();
 };
@@ -51,7 +51,7 @@ export const getUserById = async (id) => {
 
   if (!response.ok) {
     const error = await response.json();
-    throw new Error(error.message || "Failed to fetch user");
+    throw new Error(error.message);
   }
 
   return await response.json();
@@ -66,7 +66,7 @@ export const getAllUsers = async () => {
 
   if (!response.ok) {
     const error = await response.json();
-    throw new Error(error.message || "Failed to fetch users");
+    throw new Error(error.message);
   }
 
   return await response.json();
@@ -86,7 +86,7 @@ export const createUser = async (userData) => {
 
   if (!response.ok) {
     const error = await response.json();
-    throw new Error(error.message || "Failed to create user");
+    throw new Error(error.message);
   }
 
   return await response.json();
@@ -106,7 +106,7 @@ export const updateUser = async (id, userData) => {
 
   if (!response.ok) {
     const error = await response.json();
-    throw new Error(error.message || "Failed to update user");
+    throw new Error(error.message);
   }
 
   return await response.json();
@@ -120,7 +120,7 @@ export const deleteUser = async (id) => {
 
   if (!response.ok) {
     const error = await response.json();
-    throw new Error(error.message || "Failed to delete user");
+    throw new Error(error.message);
   }
 
   return await response.json();

@@ -1,11 +1,12 @@
 import { useAuth } from "../contexts/AuthContext";
+import { USER_ROLES } from '../data/cinema.consts';
 
 export const useRole = () => {
   const { user } = useAuth();
 
-  const isSysAdmin = () => user?.role === "SysAdmin";
-  const isCineAdmin = () => user?.role === "CineAdmin";
-  const isUser = () => user?.role === "User";
+  const isSysAdmin = () => user?.role === USER_ROLES.SYS_ADMIN;
+  const isCineAdmin = () => user?.role === USER_ROLES.CINE_ADMIN;
+  const isUser = () => user?.role === USER_ROLES.USER;
   const isAdminOrAbove = () => isSysAdmin() || isCineAdmin();
 
   return {

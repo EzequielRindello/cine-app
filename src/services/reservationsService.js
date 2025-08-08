@@ -14,12 +14,12 @@ export const createReservation = async (reservationData) => {
     headers: getAuthHeaders(),
     body: JSON.stringify(reservationData),
   });
- 
+
   if (!response.ok) {
     const error = await response.json();
-    throw new Error(error.message || "Failed to create reservation");
+    throw new Error(error.message);
   }
- 
+
   return await response.json();
 };
 
@@ -28,12 +28,12 @@ export const getMyReservations = async () => {
     method: "GET",
     headers: getAuthHeaders(),
   });
- 
+
   if (!response.ok) {
     const error = await response.json();
-    throw new Error(error.message || "Failed to fetch reservations");
+    throw new Error(error.message);
   }
- 
+
   return await response.json();
 };
 
@@ -43,12 +43,12 @@ export const updateReservation = async (id, reservationData) => {
     headers: getAuthHeaders(),
     body: JSON.stringify(reservationData),
   });
- 
+
   if (!response.ok) {
     const error = await response.json();
-    throw new Error(error.message || "Failed to update reservation");
+    throw new Error(error.message);
   }
- 
+
   return await response.json();
 };
 
@@ -57,11 +57,11 @@ export const cancelReservation = async (id) => {
     method: "DELETE",
     headers: getAuthHeaders(),
   });
- 
+
   if (!response.ok) {
     const error = await response.json();
-    throw new Error(error.message || "Failed to cancel reservation");
+    throw new Error(error.message);
   }
- 
+
   return await response.json();
 };

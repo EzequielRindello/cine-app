@@ -1,9 +1,9 @@
-import { ENDPOINTS } from "../data/cinema.consts";
+import { ENDPOINTS, MOVIE_ERRORS } from "../data/cinema.consts";
 
 export const getAllDirectors = async () => {
   const response = await fetch(ENDPOINTS.DIRECTORS);
   if (!response.ok) {
-    throw new Error("Failed to fetch directors");
+    throw new Error(MOVIE_ERRORS.DIRECTORS);
   }
   return await response.json();
 };
@@ -19,7 +19,7 @@ export const getDirectorById = async (id) => {
 export const getAllMovies = async () => {
   const response = await fetch(ENDPOINTS.MOVIES);
   if (!response.ok) {
-    throw new Error("Failed to fetch movies");
+    throw new Error(MOVIE_ERRORS.MOVIES);
   }
   return await response.json();
 };
@@ -27,7 +27,7 @@ export const getAllMovies = async () => {
 export const getMovieById = async (id) => {
   const response = await fetch(`${ENDPOINTS.MOVIES}/${id}`);
   if (!response.ok) {
-    throw new Error("Failed to fetch movie");
+    throw new Error(MOVIE_ERRORS.MOVIE);
   }
   return await response.json();
 };
@@ -45,7 +45,7 @@ export const createMovie = async (movieData) => {
 
   if (!response.ok) {
     const error = await response.json();
-    throw new Error(error.message || "Failed to create movie");
+    throw new Error(error.message);
   }
   return await response.json();
 };
@@ -63,7 +63,7 @@ export const updateMovie = async (id, movieData) => {
 
   if (!response.ok) {
     const error = await response.json();
-    throw new Error(error.message || "Failed to update movie");
+    throw new Error(error.message);
   }
   return await response.json();
 };
@@ -79,6 +79,6 @@ export const deleteMovie = async (id) => {
 
   if (!response.ok) {
     const error = await response.json();
-    throw new Error(error.message || "Failed to delete movie");
+    throw new Error(error.message);
   }
 };

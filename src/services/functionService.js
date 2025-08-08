@@ -1,4 +1,4 @@
-import { ENDPOINTS, MOVIE_ORIGIN } from "../data/cinema.consts";
+import { ENDPOINTS, MOVIE_ORIGIN, FUNTION_ERRORS } from "../data/cinema.consts";
 
 // helper to get token
 const getAuthHeaders = () => {
@@ -43,7 +43,6 @@ export const functionService = {
         totalFunctions: functionsData.length,
       };
     } catch (error) {
-      console.error("Error fetching stats:", error);
       throw error;
     }
   },
@@ -71,7 +70,6 @@ export const functionService = {
         };
       });
     } catch (error) {
-      console.error("Error fetching movies:", error);
       throw error;
     }
   },
@@ -91,7 +89,6 @@ export const functionService = {
         },
       }));
     } catch (error) {
-      console.error("Error fetching functions:", error);
       throw error;
     }
   },
@@ -115,7 +112,7 @@ export const functionService = {
         movie = moviesData.find((m) => m.id === parseInt(movieId));
       }
 
-      if (!movie) throw new Error("Movie not found");
+      if (!movie) throw new Error(FUNTION_ERRORS.MOVIE_NOT_FOUND);
 
       return {
         movie: {
@@ -127,7 +124,6 @@ export const functionService = {
         canAddMore: await this.canAddMoreFunctions(movieId),
       };
     } catch (error) {
-      console.error("Error fetching movie functions:", error);
       throw error;
     }
   },
@@ -157,7 +153,6 @@ export const functionService = {
 
       return movieFunctions.length < 8;
     } catch (error) {
-      console.error("Error checking function limit:", error);
       return false;
     }
   },
@@ -179,7 +174,6 @@ export const functionService = {
 
       return directorFunctionsOnDate.length < 10;
     } catch (error) {
-      console.error("Error checking director function limit:", error);
       return false;
     }
   },
@@ -192,28 +186,26 @@ export const functionService = {
         const moviesResponse = await fetch(ENDPOINTS.MOVIES);
         const moviesData = await moviesResponse.json();
         const movie = moviesData.find((m) => m.id === parseInt(movieId));
-        
+
         if (movie?.type === MOVIE_ORIGIN.INTERNATIONAL) {
-          throw new Error("This international movie has already reached the limit of 8 functions");
+          throw new Error(FUNTION_ERRORS.INTERNATIONAL_MOVIE_LIMIT);
         }
-        throw new Error("Cannot add more functions for this movie");
+        throw new Error(FUNTION_ERRORS.MOVIE_LIMIT);
       }
 
       // get movie info to check director limit
       const moviesResponse = await fetch(ENDPOINTS.MOVIES);
       const moviesData = await moviesResponse.json();
       const movie = moviesData.find((m) => m.id === parseInt(movieId));
-      
-      if (!movie) throw new Error("Movie not found");
+
+      if (!movie) throw new Error(FUNTION_ERRORS.MOVIE_NOT_FOUND);
 
       const canDirectorAdd = await this.canDirectorAddFunction(
         movie.directorId,
         date
       );
       if (!canDirectorAdd) {
-        throw new Error(
-          `Director ${movie.director?.name} already has 10 functions scheduled for ${date}`
-        );
+        throw new Error(FUNTION_ERRORS.DIRECTOR_FUNCTION_LIMIT);
       }
 
       const newFunction = {
@@ -231,17 +223,16 @@ export const functionService = {
 
       if (!response.ok) {
         if (response.status === 401) {
-          throw new Error("You don't have permission to add. Please log in.");
+          throw new Error(FUNTION_ERRORS.FUNTIONS_PERMISSION);
         } else if (response.status === 404) {
-          throw new Error("Function not found.");
+          throw new Error(FUNTION_ERRORS.FUNCTION_NOT_FOUND);
         } else {
-          throw new Error("Error creating function");
+          throw new Error(FUNTION_ERRORS.ERROR_FUNCTION);
         }
       }
 
       return await response.json();
     } catch (error) {
-      console.error("Error creating function:", error);
       throw error;
     }
   },
@@ -265,17 +256,16 @@ export const functionService = {
 
       if (!response.ok) {
         if (response.status === 401) {
-          throw new Error("You don't have permission to edit. Please log in.");
+          throw new Error(FUNTION_ERRORS.FUNTIONS_PERMISSION);
         } else if (response.status === 404) {
-          throw new Error("Function not found.");
+          throw new Error(FUNTION_ERRORS.FUNCTION_NOT_FOUND);
         } else {
-          throw new Error("Error updating function");
+          throw new Error(FUNTION_ERRORS.ERROR_FUNCTION);
         }
       }
 
       return await response.json();
     } catch (error) {
-      console.error("Error updating function:", error);
       throw error;
     }
   },
@@ -289,21 +279,19 @@ export const functionService = {
 
       if (!response.ok) {
         if (response.status === 401) {
-          throw new Error("You don't have permission to delete. Please log in.");
+          throw new Error(FUNTION_ERRORS.FUNTIONS_PERMISSION);
         } else if (response.status === 404) {
-          throw new Error("Function not found.");
+          throw new Error(FUNTION_ERRORS.FUNCTION_NOT_FOUND);
         } else {
-          throw new Error("Error deleting function");
+          throw new Error(FUNTION_ERRORS.ERROR_FUNCTION);
         }
       }
 
       return true;
     } catch (error) {
-      console.error("Error deleting function:", error);
       throw error;
     }
   },
-
 };
 
 export default functionService;

@@ -20,3 +20,33 @@ export const ENDPOINTS = {
   RESERVATIONS: "https://localhost:7063/api/reservation",
   MY_RESERVATIONS: "https://localhost:7063/api/reservation/my-reservations",
 };
+
+export const USER_ROLES = {
+  SYS_ADMIN: "SysAdmin",
+  CINE_ADMIN: "CineAdmin",
+  USER: "User",
+};
+
+export const FUNTION_ERRORS = {
+  FUNCTION_LIMIT:
+    "You have reached the maximum number of functions for this movie.",
+  DIRECTOR_FUNCTION_LIMIT:
+    "The director has reached the maximum number of functions for this date.",
+  INTERNATIONAL_MOVIE_LIMIT:
+    "This international movie has already reached the limit of 8 functions.",
+  MOVIE_LIMIT: "Cannot add more functions for this movie.",
+  FUNCTION_NOT_FOUND: "Function not found.",
+  FUNTIONS_PERMISSION: "You don't have permission to perform this action.",
+  ERROR_FUNCTION: "Error, please contact an administrator.",
+};
+
+export const LOGIN_ERRORS = {
+  LOGIN_FAILED: "Login failed. Please check your email and password.",
+  REGISTRATION_FAILED: "Registration failed. Please try again.",
+};
+
+export const MOVIE_ERRORS = {
+  DIRECTORS: "Failed to fetch directors",
+  MOVIES: "Failed to fetch movies",
+  MOVIE: "Failed to fetch movie",
+};
