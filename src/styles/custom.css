@@ -102,14 +102,13 @@ h6 {
 }
 
 /* login styles */
-.login-form{
+.login-form {
   min-width: 50vh;
 }
-.login-form p{
+.login-form p {
   font-style: italic;
-  
 }
-.login-form p:hover{
+.login-form p:hover {
   text-decoration: underline;
   cursor: pointer;
 }
@@ -136,6 +135,27 @@ h6 {
   background-color: #23211e;
 }
 
+/* tables styles */
+.custom-table {
+  font-size: 0.9rem;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.custom-table thead {
+  background-color: #343a40;
+  color: white;
+}
+
+.custom-table tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+.custom-table td,
+.custom-table th {
+  vertical-align: middle;
+}
+
 /* spinner */
 .sipnner {
   color: #12100d;
@@ -156,4 +176,10 @@ h6 {
   z-index: 1000;
   border-top: 1px solid rgba(255, 255, 255, 0.12);
   margin-top: auto;
+}
+
+@media (max-width: 768px) {
+  .custom-table button {
+    margin: 5px;
+  }
 }

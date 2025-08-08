@@ -147,42 +147,44 @@ const MovieManagement = () => {
       {loading ? (
         <LoadingSpinner />
       ) : (
-        <Table striped bordered hover>
-          <thead>
-            <tr>
-              <th>Title</th>
-              <th>Type</th>
-              <th>Director</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {movies.map((movie) => (
-              <tr key={movie.id}>
-                <td>{movie.title}</td>
-                <td>{movie.type}</td>
-                <td>{movie.director?.name || "N/A"}</td>
-                <td>
-                  <Button
-                    variant="warning"
-                    size="sm"
-                    className="me-2"
-                    onClick={() => handleEdit(movie)}
-                  >
-                    Edit
-                  </Button>
-                  <Button
-                    variant="danger"
-                    size="sm"
-                    onClick={() => confirmDelete(movie)}
-                  >
-                    Delete
-                  </Button>
-                </td>
+        <div className="table-responsive">
+          <Table striped bordered hover className="custom-table">
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Type</th>
+                <th>Director</th>
+                <th>Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </Table>
+            </thead>
+            <tbody>
+              {movies.map((movie) => (
+                <tr key={movie.id}>
+                  <td>{movie.title}</td>
+                  <td>{movie.type}</td>
+                  <td>{movie.director?.name || "N/A"}</td>
+                  <td>
+                    <Button
+                      variant="warning"
+                      size="sm"
+                      className="me-2"
+                      onClick={() => handleEdit(movie)}
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      variant="danger"
+                      size="sm"
+                      onClick={() => confirmDelete(movie)}
+                    >
+                      Delete
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </div>
       )}
 
       <CreateEditMovieModal

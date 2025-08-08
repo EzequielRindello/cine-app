@@ -4,7 +4,7 @@ import * as loginService from "../../services/loginService";
 
 import DismissableAlert from "../modals/DismissableAlert";
 import CreateEditUserModal from "../modals/CreateEditUserModal";
-import LoadingSpinner from '../common/LoadingSpinner';
+import LoadingSpinner from "../common/LoadingSpinner";
 import DeleteUserModal from "../modals/DeleteUserModal";
 
 const UserManagement = () => {
@@ -131,44 +131,46 @@ const UserManagement = () => {
       {loading ? (
         <LoadingSpinner />
       ) : (
-        <Table striped bordered hover>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Role</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.map((user) => (
-              <tr key={user.id}>
-                <td>
-                  {user.firstName} {user.lastName}
-                </td>
-                <td>{user.email}</td>
-                <td>{user.role}</td>
-                <td>
-                  <Button
-                    variant="warning"
-                    size="sm"
-                    className="me-2"
-                    onClick={() => handleEdit(user)}
-                  >
-                    Edit
-                  </Button>
-                  <Button
-                    variant="danger"
-                    size="sm"
-                    onClick={() => confirmDelete(user)}
-                  >
-                    Delete
-                  </Button>
-                </td>
+        <div className="table-responsive">
+          <Table striped bordered hover className="custom-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </Table>
+            </thead>
+            <tbody>
+              {users.map((user) => (
+                <tr key={user.id}>
+                  <td>
+                    {user.firstName} {user.lastName}
+                  </td>
+                  <td>{user.email}</td>
+                  <td>{user.role}</td>
+                  <td>
+                    <Button
+                      variant="warning"
+                      size="sm"
+                      className="me-2"
+                      onClick={() => handleEdit(user)}
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      variant="danger"
+                      size="sm"
+                      onClick={() => confirmDelete(user)}
+                    >
+                      Delete
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </div>
       )}
 
       <CreateEditUserModal
