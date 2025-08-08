@@ -33,15 +33,16 @@ const CreateEditMovieModal = ({
 
           <Form.Group className="mb-3">
             <Form.Label>Type</Form.Label>
-            <Form.Control
-              type="text"
+            <Form.Select
               name="type"
               value={formData.type}
               onChange={onChange}
               required
-              maxLength={50}
-              placeholder="e.g., Action, Comedy, Drama"
-            />
+            >
+              <option value="">Select movie type...</option>
+              <option value="national">National</option>
+              <option value="international">International</option>
+            </Form.Select>
           </Form.Group>
 
           <Form.Group className="mb-3">
