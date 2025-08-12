@@ -9,12 +9,6 @@ const getAuthHeaders = () => {
   };
 };
 
-const roleMap = {
-  User: 1,
-  CineAdmin: 2,
-  SysAdmin: 3,
-};
-
 export const login = async (email, password) => {
   const response = await fetch(ENDPOINTS.AUTH_LOGIN, {
     method: "POST",
@@ -23,9 +17,7 @@ export const login = async (email, password) => {
     },
     body: JSON.stringify({ email, password }),
   });
-
   if (!response.ok) throw new Error(LOGIN_ERRORS.LOGIN_FAILED);
-
   return await response.json();
 };
 
@@ -37,9 +29,7 @@ export const register = async (data) => {
     },
     body: JSON.stringify(data),
   });
-
   if (!response.ok) throw new Error(LOGIN_ERRORS.REGISTRATION_FAILED);
-
   return await response.json();
 };
 
@@ -48,80 +38,9 @@ export const getUserById = async (id) => {
     method: "GET",
     headers: getAuthHeaders(),
   });
-
   if (!response.ok) {
     const error = await response.json();
     throw new Error(error.message);
   }
-
-  return await response.json();
-};
-
-// only SysAdmin can access these endpoints
-export const getAllUsers = async () => {
-  const response = await fetch(ENDPOINTS.AUTH_USERS, {
-    method: "GET",
-    headers: getAuthHeaders(),
-  });
-
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.message);
-  }
-
-  return await response.json();
-};
-
-export const createUser = async (userData) => {
-  const payload = {
-    ...userData,
-    role: typeof userData.role === "string" ? roleMap[userData.role] : userData.role,
-  };
-
-  const response = await fetch(ENDPOINTS.AUTH_USERS, {
-    method: "POST",
-    headers: getAuthHeaders(),
-    body: JSON.stringify(payload),
-  });
-
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.message);
-  }
-
-  return await response.json();
-};
-
-export const updateUser = async (id, userData) => {
-  const payload = {
-    ...userData,
-    role: typeof userData.role === "string" ? roleMap[userData.role] : userData.role,
-  };
-
-  const response = await fetch(`${ENDPOINTS.AUTH_USERS_BY_ID}/${id}`, {
-    method: "PUT",
-    headers: getAuthHeaders(),
-    body: JSON.stringify(payload),
-  });
-
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.message);
-  }
-
-  return await response.json();
-};
-
-export const deleteUser = async (id) => {
-  const response = await fetch(`${ENDPOINTS.AUTH_USERS_BY_ID}/${id}`, {
-    method: "DELETE",
-    headers: getAuthHeaders(),
-  });
-
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.message);
-  }
-
   return await response.json();
 };

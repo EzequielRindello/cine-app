@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Table, Button } from "react-bootstrap";
 import * as loginService from "../../services/loginService";
+import * as userService from "../../services/userService";
 
 import DismissableAlert from "../modals/DismissableAlert";
 import CreateEditUserModal from "../modals/CreateEditUserModal";
@@ -37,7 +38,7 @@ const UserManagement = () => {
   const loadUsers = async () => {
     try {
       setLoading(true);
-      const usersData = await loginService.getAllUsers();
+      const usersData = await userService.getAllUsers();
       setUsers(usersData);
     } catch (err) {
       showAlert("danger", "Failed to load users");
@@ -52,10 +53,10 @@ const UserManagement = () => {
     try {
       if (editingUser) {
         const { password, ...updateData } = formData;
-        await loginService.updateUser(editingUser.id, updateData);
+        await userService.updateUser(editingUser.id, updateData);
         showAlert("success", "User updated successfully");
       } else {
-        await loginService.createUser(formData);
+        await userService.createUser(formData);
         showAlert("success", "User created successfully");
       }
 
@@ -99,7 +100,7 @@ const UserManagement = () => {
     if (!userToDelete) return;
 
     try {
-      await loginService.deleteUser(userToDelete.id);
+      await userService.deleteUser(userToDelete.id);
       showAlert("success", "User deleted");
       await loadUsers();
     } catch (err) {

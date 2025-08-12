@@ -9,14 +9,16 @@ export const MODAL_MODES = {
 };
 
 export const ENDPOINTS = {
-  MOVIES: "https://localhost:7063/api/Movies",
+ MOVIES: "https://localhost:7063/api/Movies",
   DIRECTORS: "https://localhost:7063/api/Directors",
   FUNCTION: "https://localhost:7063/api/Functions",
+ 
   AUTH_LOGIN: "https://localhost:7063/api/Auth/login",
   AUTH_REGISTER: "https://localhost:7063/api/Auth/register",
   AUTH_USER: "https://localhost:7063/api/Auth/user",
-  AUTH_USERS: "https://localhost:7063/api/auth/users",
-  AUTH_USERS_BY_ID: "https://localhost:7063/api/auth/users",
+  
+  USERS: "https://localhost:7063/api/User",
+  USER_BY_ID: "https://localhost:7063/api/User",
   RESERVATIONS: "https://localhost:7063/api/reservation",
   MY_RESERVATIONS: "https://localhost:7063/api/reservation/my-reservations",
 };
