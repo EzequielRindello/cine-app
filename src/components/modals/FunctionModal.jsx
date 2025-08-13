@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { useFunctions } from "../../contexts/FunctionsContext";
 import { MODAL_MODES } from "../../constants/cinema.consts";
+import { formatFunctionForForm } from "../../helpers/formatters";
 import SuccessModal from "./SuccessModal";
 import DeleteConfirmationModal from "./DeleteConfirmationModal";
 
@@ -20,17 +21,12 @@ const FunctionModal = ({
   const [error, setError] = useState(null);
   const today = new Date().toISOString().split("T")[0];
   const [formData, setFormData] = useState(() => {
-  if (mode === MODAL_MODES.EDIT && func) {
-    return {
-      date: func.date,
-      time: func.time,
-      price: func.price,
-    };
-  } else {
-    return { date: "", time: "", price: "" };
-  }
-});
-
+    if (mode === MODAL_MODES.EDIT && func) {
+      return formatFunctionForForm(func);
+    } else {
+      return { date: "", time: "", price: "" };
+    }
+  });
 
   const { addFunction, editFunction, deleteFunction } = useFunctions();
 
@@ -122,7 +118,9 @@ const FunctionModal = ({
               <Form.Control
                 type="text"
                 value={
-                  mode === MODAL_MODES.ADD ? directorName : func?.movie?.directorName
+                  mode === MODAL_MODES.ADD
+                    ? directorName
+                    : func?.movie?.directorName
                 }
                 disabled
                 className="bg-light text-secondary"

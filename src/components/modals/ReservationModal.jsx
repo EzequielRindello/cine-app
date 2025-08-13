@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Modal, Form, Button, Alert } from "react-bootstrap";
 import * as reservationService from "../../services/reservationsService";
+import { renderTicketOptions } from "../../helpers/ticketHelpers.jsx";
 
 const ReservationModal = ({
   show,
@@ -48,7 +49,6 @@ const ReservationModal = ({
         setResponseMessage({ type: "", text: "" });
         setTicketQuantity(1);
       }, 2000);
-
     } catch (err) {
       setResponseMessage({ type: "danger", text: err.message });
     } finally {
@@ -90,15 +90,7 @@ const ReservationModal = ({
               onChange={(e) => setTicketQuantity(e.target.value)}
               disabled={loading}
             >
-              {[1, 2, 3, 4].map((num) => (
-                <option
-                  key={num}
-                  value={num}
-                  disabled={num > func.availableSeats}
-                >
-                  {num} ticket{num > 1 ? "s" : ""}
-                </option>
-              ))}
+              {renderTicketOptions(func.availableSeats)}
             </Form.Select>
           </Form.Group>
           <div className="mb-3">
