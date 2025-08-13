@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import functionService from "../services/functionService.js";
-import { useRole } from "../hooks/userRole.js";
+import { useRole } from "../hooks/useRole.js";
 
 import LoadingSpinner from "../components/common/LoadingSpinner.jsx";
 import HomeHeader from "../components/home/HomeHeader.jsx";
@@ -35,7 +35,6 @@ const Home = () => {
 
   const handleCallToAction = () => navigate("/movies");
   const handleCallToActionFunc = () => navigate("/functions");
-  const handleLogin = () => navigate("/login");
 
   if (error) {
     return <ServerError error={error} />;
@@ -51,14 +50,12 @@ const Home = () => {
           </div>
         )}
       </div>
-
       {!loading && isAdminOrAbove() && (
         <>
           <StatsGrid stats={stats} />
           <AdditionalInfo />
         </>
       )}
-
       {!loading && isUser() && (
         <div className="d-flex flex-column align-items-center mt-3">
           <p>You can browse available movies and reserve tickets.</p>
@@ -67,25 +64,24 @@ const Home = () => {
             data may reset at any time.
           </p>
           <p className="mb-3">
-            Found a bug or want to give feedback?{" "}
+            Found a bug or want to give feedback?
             <a href="mailto:support@cinemaapp.dev">Contact us</a>.
           </p>
           <button
             onClick={handleCallToActionFunc}
             className="btn btn-primary mt-3"
           >
-            View Funtions
+            View Functions
           </button>
         </div>
       )}
-
       {!loading && !isAdminOrAbove() && !isUser() && (
         <div className="alert alert-warning">
-          <strong>Notice:</strong> Please log in or create an account to use the
-          app.{" "}
-          <a className="call-to-action-link" onClick={handleLogin}>
+          <strong>Notice: </strong>
+          Please log in or create an account to use the app.
+          <Link className="call-to-action-link" to="/login">
             Login
-          </a>
+          </Link>
         </div>
       )}
     </div>

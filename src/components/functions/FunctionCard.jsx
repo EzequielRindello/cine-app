@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { Button, Card } from "react-bootstrap";
-import { formatFunctionDateTime } from "../../services/formatters";
+import { formatFunctionDateTime } from "../../helpers/formatters";
 import FunctionModal from "../modals/FunctionModal";
 import ReservationModal from "../modals/ReservationModal";
-import { useRole } from "../../hooks/userRole";
+import { useRole } from "../../hooks/useRole";
 
 const FunctionCard = ({ func }) => {
   const [showModal, setShowModal] = useState(false);
@@ -15,6 +15,10 @@ const FunctionCard = ({ func }) => {
     const token = localStorage.getItem("token");
     setIsLoggedIn(token ? true : false);
   }, []);
+
+  const handleReservationSuccess = (quantity) => {
+    func.availableSeats -= quantity;
+  };
 
   const handleManageClick = () => {
     setShowModal(true);
@@ -42,7 +46,6 @@ const FunctionCard = ({ func }) => {
           </Card.Subtitle>
           <Card.Text>Price: ${func.price}</Card.Text>
           <Card.Text>Available Seats: {func.availableSeats}</Card.Text>
-
           {isLoggedIn && isAdminOrAbove() && (
             <Button
               variant="warning"
@@ -52,7 +55,6 @@ const FunctionCard = ({ func }) => {
               Manage Function
             </Button>
           )}
-
           {isLoggedIn && isUser() && func.availableSeats > 0 && (
             <Button variant="primary" onClick={handleReserveClick}>
               Reserve Tickets
@@ -60,18 +62,17 @@ const FunctionCard = ({ func }) => {
           )}
         </Card.Body>
       </Card>
-
       <FunctionModal
         show={showModal}
         handleClose={handleClose}
         mode="edit"
         func={func}
       />
-
       <ReservationModal
         show={showReservationModal}
         handleClose={handleReservationClose}
         func={func}
+        onReservationSuccess={handleReservationSuccess}
       />
     </>
   );

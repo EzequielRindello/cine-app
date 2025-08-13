@@ -1,4 +1,4 @@
-import { ENDPOINTS, MOVIE_ORIGIN, FUNTION_ERRORS } from "../data/cinema.consts";
+import { ENDPOINTS, MOVIE_ORIGIN, FUNTION_ERRORS } from "../constants/cinema.consts";
 
 // helper to get token
 const getAuthHeaders = () => {
@@ -79,7 +79,6 @@ export const functionService = {
       const functionsResponse = await fetch(ENDPOINTS.FUNCTION);
       const functionsData = await functionsResponse.json();
 
-      // Since the API already returns the movie with director info, no need to transform
       return functionsData.map((func) => ({
         ...func,
         movie: {

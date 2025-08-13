@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Button, Container, Alert, Row, Col } from "react-bootstrap";
 import { useAuth } from "../contexts/AuthContext";
-import { useRole } from "../hooks/userRole.js";
+import { useRole } from "../hooks/useRole.js";
 import LoadingSpinner from "../components/common/LoadingSpinner";
 import ProfileCard from "../components/login/ProfileCard.jsx";
 import UserManagement from "../components/admin/UserManagement.jsx";
@@ -45,30 +45,27 @@ const UserProfile = () => {
             Logout
           </Button>
         </Col>
-
         <Col md={8}>
           {isSysAdmin() && (
-            <div>
+            <>
               <h3>User Management</h3>
               <UserManagement />
-            </div>
+            </>
           )}
-
           {isCineAdmin() && (
-            <div>
+            <>
               <h3>CineAdmin Profile</h3>
               <Alert className="mt-3" variant="warning">
                 CineAdmin accounts cannot be modified directly. Please contact a
                 SysAdmin for any changes.
               </Alert>
-            </div>
+            </>
           )}
-
           {isUser() && (
-            <div>
+            <>
               <h3>My Reservations</h3>
               <MyReservations />
-            </div>
+            </>
           )}
         </Col>
       </Row>

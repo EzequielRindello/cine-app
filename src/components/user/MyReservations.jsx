@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { Alert, Card, Button, Modal, Form } from "react-bootstrap";
 import * as reservationService from "../../services/reservationsService";
+import { renderTicketOptions } from "../../helpers/ticketHelpers.jsx";
+import { canModifyReservation } from "../../helpers/reservationHelpers.js";
 
 const MyReservations = () => {
   const [reservations, setReservations] = useState([]);
@@ -48,8 +50,11 @@ const MyReservations = () => {
   const handleUpdate = async () => {
     try {
       const updateData = {
-        movieFunctionId: editingReservation.movieFunctionId,
-        ticketQuantity: parseInt(newTicketQuantity),
+        movieFunctionId: editingReservation.movieFunction?.id,
+        ticketQuantity: Number(newTicketQuantity),
+        reservationDate: editingReservation.reservationDate,
+        totalAmount:
+          editingReservation.movieFunction?.price * Number(newTicketQuantity),
       };
 
       await reservationService.updateReservation(
@@ -82,24 +87,15 @@ const MyReservations = () => {
     setShowCancelModal(true);
   };
 
-  const canModifyReservation = (reservation) => {
-    const functionDateTime = new Date(reservation.movieFunction.date);
-    const now = new Date();
-    const oneHourBefore = new Date(functionDateTime.getTime() - 60 * 60 * 1000);
-
-    return now < oneHourBefore;
-  };
-
   if (loading) return <p>Loading reservations...</p>;
 
   return (
-    <div>
+    <>
       {error && <Alert variant="danger">{error}</Alert>}
-
       {reservations.length === 0 ? (
         <Alert variant="info">You don't have any reservations yet.</Alert>
       ) : (
-        <div>
+        <>
           {reservations.map((reservation) => (
             <Card key={reservation.id} className="mb-3">
               <Card.Body>
@@ -121,7 +117,6 @@ const MyReservations = () => {
                   <strong>Reserved on:</strong>{" "}
                   {new Date(reservation.reservationDate).toLocaleDateString()}
                 </Card.Text>
-
                 {canModifyReservation(reservation) && (
                   <div className="mt-3">
                     <Button
@@ -141,7 +136,6 @@ const MyReservations = () => {
                     </Button>
                   </div>
                 )}
-
                 {!canModifyReservation(reservation) && (
                   <Alert variant="info" className="mt-2 mb-0">
                     This reservation cannot be modified (function is too soon or
@@ -151,9 +145,8 @@ const MyReservations = () => {
               </Card.Body>
             </Card>
           ))}
-        </div>
+        </>
       )}
-
       <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Edit Reservation</Modal.Title>
@@ -180,30 +173,18 @@ const MyReservations = () => {
                   {editingReservation.movieFunction?.price}
                 </p>
               </div>
-
               <Form.Group className="mb-3">
                 <Form.Label>Number of Tickets</Form.Label>
                 <Form.Select
                   value={newTicketQuantity}
                   onChange={(e) => setNewTicketQuantity(e.target.value)}
                 >
-                  {[1, 2, 3, 4].map((num) => {
-                    const maxAvailable =
-                      editingReservation.movieFunction?.availableSeats +
-                      editingReservation.ticketQuantity;
-                    return (
-                      <option
-                        key={num}
-                        value={num}
-                        disabled={num > maxAvailable}
-                      >
-                        {num} ticket{num > 1 ? "s" : ""}
-                      </option>
-                    );
-                  })}
+                  {renderTicketOptions(
+                    editingReservation.movieFunction?.availableSeats +
+                      editingReservation.ticketQuantity
+                  )}
                 </Form.Select>
               </Form.Group>
-
               <div className="mb-3">
                 <strong>
                   New Total: $
@@ -224,7 +205,6 @@ const MyReservations = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-
       <Modal show={showCancelModal} onHide={() => setShowCancelModal(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Confirm Cancellation</Modal.Title>
@@ -242,7 +222,7 @@ const MyReservations = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-    </div>
+    </>
   );
 };
 

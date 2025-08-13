@@ -1,5 +1,5 @@
 import { useAuth } from "../contexts/AuthContext";
-import { USER_ROLES } from '../data/cinema.consts';
+import { USER_ROLES } from '../constants/cinema.consts';
 
 export const useRole = () => {
   const { user } = useAuth();

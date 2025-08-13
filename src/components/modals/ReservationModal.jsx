@@ -2,23 +2,33 @@ import { useState } from "react";
 import { Modal, Form, Button, Alert } from "react-bootstrap";
 import * as reservationService from "../../services/reservationsService";
 
-const ReservationModal = ({ show, handleClose, func }) => {
+const ReservationModal = ({
+  show,
+  handleClose,
+  func,
+  onReservationSuccess,
+}) => {
   const [ticketQuantity, setTicketQuantity] = useState(1);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const [responseMessage, setResponseMessage] = useState({
+    type: "",
+    text: "",
+  });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (ticketQuantity > func.availableSeats) {
-      setError(`Only ${func.availableSeats} seats available`);
+      setResponseMessage({
+        type: "danger",
+        text: `Only ${func.availableSeats} seats available`,
+      });
       return;
     }
 
     try {
       setLoading(true);
-      setError("");
+      setResponseMessage({ type: "", text: "" });
 
       const reservationData = {
         movieFunctionId: func.id,
@@ -26,16 +36,21 @@ const ReservationModal = ({ show, handleClose, func }) => {
       };
 
       await reservationService.createReservation(reservationData);
-      setSuccess("Reservation created successfully!");
+      setResponseMessage({
+        type: "success",
+        text: "Reservation created successfully!",
+      });
+
+      if (onReservationSuccess) onReservationSuccess(ticketQuantity);
 
       setTimeout(() => {
         handleClose();
-        setSuccess("");
+        setResponseMessage({ type: "", text: "" });
         setTicketQuantity(1);
-        window.location.reload();
-      }, 1500);
+      }, 2000);
+
     } catch (err) {
-      setError(err.message);
+      setResponseMessage({ type: "danger", text: err.message });
     } finally {
       setLoading(false);
     }
@@ -48,12 +63,11 @@ const ReservationModal = ({ show, handleClose, func }) => {
       <Modal.Header closeButton>
         <Modal.Title>Reserve Tickets</Modal.Title>
       </Modal.Header>
-
       <Form onSubmit={handleSubmit}>
         <Modal.Body>
-          {error && <Alert variant="danger">{error}</Alert>}
-          {success && <Alert variant="success">{success}</Alert>}
-
+          {responseMessage.text && (
+            <Alert variant={responseMessage.type}>{responseMessage.text}</Alert>
+          )}
           <div className="mb-3">
             <h5>{func.movie?.title}</h5>
             <p>
@@ -69,7 +83,6 @@ const ReservationModal = ({ show, handleClose, func }) => {
               <strong>Price per ticket:</strong> ${func.price}
             </p>
           </div>
-
           <Form.Group className="mb-3">
             <Form.Label>Number of Tickets</Form.Label>
             <Form.Select
@@ -88,12 +101,10 @@ const ReservationModal = ({ show, handleClose, func }) => {
               ))}
             </Form.Select>
           </Form.Group>
-
           <div className="mb-3">
             <strong>Total Amount: ${totalAmount}</strong>
           </div>
         </Modal.Body>
-
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose} disabled={loading}>
             Cancel

@@ -24,7 +24,6 @@ const CreateEditUserModal = ({
             required
           />
         </Form.Group>
-
         <Form.Group className="mb-3">
           <Form.Label>Last Name</Form.Label>
           <Form.Control
@@ -35,7 +34,6 @@ const CreateEditUserModal = ({
             required
           />
         </Form.Group>
-
         <Form.Group className="mb-3">
           <Form.Label>Email</Form.Label>
           <Form.Control
@@ -46,7 +44,6 @@ const CreateEditUserModal = ({
             required
           />
         </Form.Group>
-
         {!editingUser && (
           <Form.Group className="mb-3">
             <Form.Label>Password</Form.Label>
@@ -59,7 +56,6 @@ const CreateEditUserModal = ({
             />
           </Form.Group>
         )}
-
         <Form.Group className="mb-3">
           <Form.Label>Role</Form.Label>
           <Form.Select name="role" value={formData.role} onChange={onChange}>

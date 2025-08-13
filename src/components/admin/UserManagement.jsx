@@ -1,8 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Table, Button } from "react-bootstrap";
-import * as loginService from "../../services/loginService";
 import * as userService from "../../services/userService";
-
+import { INITIAL_USER_FORM } from "../../constants/formData.consts";
 import DismissableAlert from "../modals/DismissableAlert";
 import CreateEditUserModal from "../modals/CreateEditUserModal";
 import LoadingSpinner from "../common/LoadingSpinner";
@@ -13,29 +12,17 @@ const UserManagement = () => {
   const [showModal, setShowModal] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
   const [loading, setLoading] = useState(false);
-
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    password: "",
-    role: "User",
-  });
-
+  const [formData, setFormData] = useState(INITIAL_USER_FORM);
   const [alert, setAlert] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [userToDelete, setUserToDelete] = useState(null);
-
-  useEffect(() => {
-    loadUsers();
-  }, []);
 
   const showAlert = (type, message, duration = 4000) => {
     setAlert({ type, message });
     setTimeout(() => setAlert(null), duration);
   };
 
-  const loadUsers = async () => {
+  const loadUsers = useCallback(async () => {
     try {
       setLoading(true);
       const usersData = await userService.getAllUsers();
@@ -46,7 +33,11 @@ const UserManagement = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    loadUsers();
+  }, [loadUsers]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -69,24 +60,13 @@ const UserManagement = () => {
     }
   };
 
-  const resetForm = () => {
-    setFormData({
-      firstName: "",
-      lastName: "",
-      email: "",
-      password: "",
-      role: "User",
-    });
-  };
+  const resetForm = () => setFormData(INITIAL_USER_FORM);
 
   const handleEdit = (user) => {
     setEditingUser(user);
     setFormData({
-      firstName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
+      ...user,
       password: "",
-      role: user.role,
     });
     setShowModal(true);
   };
@@ -112,23 +92,27 @@ const UserManagement = () => {
   };
 
   const handleInputChange = (e) => {
-    setFormData({
-      ...formData,
+    setFormData((prev) => ({
+      ...prev,
       [e.target.name]: e.target.value,
-    });
+    }));
+  };
+
+  const handleOnHide = () => {
+    setShowModal(false);
+    setEditingUser(null);
+    resetForm();
   };
 
   return (
-    <div>
+    <>
       <DismissableAlert type={alert?.type} message={alert?.message} />
-
       <div className="d-flex justify-content-between mb-3">
         <p>Please be aware that some actions are irreversible.</p>
         <Button variant="primary" onClick={() => setShowModal(true)}>
           Create User
         </Button>
       </div>
-
       {loading ? (
         <LoadingSpinner />
       ) : (
@@ -173,27 +157,21 @@ const UserManagement = () => {
           </Table>
         </div>
       )}
-
       <CreateEditUserModal
         show={showModal}
-        onHide={() => {
-          setShowModal(false);
-          setEditingUser(null);
-          resetForm();
-        }}
+        onHide={handleOnHide}
         onSubmit={handleSubmit}
         formData={formData}
         onChange={handleInputChange}
         editingUser={editingUser}
       />
-
       <DeleteUserModal
         show={showDeleteModal}
         onHide={() => setShowDeleteModal(false)}
         onConfirm={handleDelete}
         user={userToDelete}
       />
-    </div>
+    </>
   );
 };
 

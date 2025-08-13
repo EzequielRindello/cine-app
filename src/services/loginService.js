@@ -1,4 +1,4 @@
-import { ENDPOINTS, LOGIN_ERRORS } from "../data/cinema.consts";
+import { ENDPOINTS, LOGIN_ERRORS } from "../constants/cinema.consts";
 
 // helpers
 const getAuthHeaders = () => {

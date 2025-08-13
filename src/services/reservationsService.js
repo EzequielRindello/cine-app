@@ -1,4 +1,4 @@
-import { ENDPOINTS } from "../data/cinema.consts";
+import { ENDPOINTS } from "../constants/cinema.consts";
 
 const getAuthHeaders = () => {
   const token = localStorage.getItem("token");

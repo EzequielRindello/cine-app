@@ -1,4 +1,4 @@
-import { ENDPOINTS } from "../data/cinema.consts";
+import { ENDPOINTS } from "../constants/cinema.consts";
 
 // helpers
 const getAuthHeaders = () => {
@@ -15,7 +15,7 @@ const roleMap = {
   SysAdmin: 3,
 };
 
-// User management functions (only SysAdmin can access these endpoints)
+// User management functions (only SysAdmin)
 export const getAllUsers = async () => {
   const response = await fetch(ENDPOINTS.USERS, {
     method: "GET",

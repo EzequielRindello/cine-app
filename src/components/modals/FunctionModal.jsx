@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { useFunctions } from "../../contexts/FunctionsContext";
-import { MODAL_MODES } from "../../data/cinema.consts";
+import { MODAL_MODES } from "../../constants/cinema.consts";
 import SuccessModal from "./SuccessModal";
 import DeleteConfirmationModal from "./DeleteConfirmationModal";
 

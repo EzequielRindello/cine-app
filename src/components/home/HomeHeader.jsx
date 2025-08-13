@@ -1,4 +1,4 @@
-import { useRole } from "../../hooks/userRole.js";
+import { useRole } from "../../hooks/useRole.js";
 
 const HomeHeader = ({ onCallToAction }) => {
   const { isAdminOrAbove, isUser } = useRole();

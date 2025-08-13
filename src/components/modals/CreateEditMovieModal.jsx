@@ -2,12 +2,12 @@ import { Modal, Button, Form } from "react-bootstrap";
 
 const CreateEditMovieModal = ({
   show,
+  editingMovie,
+  formData,
+  directors,
   onHide,
   onSubmit,
-  formData,
   onChange,
-  directors,
-  editingMovie,
 }) => {
   return (
     <Modal show={show} onHide={onHide} size="lg">
@@ -30,7 +30,6 @@ const CreateEditMovieModal = ({
               placeholder="Enter movie title"
             />
           </Form.Group>
-
           <Form.Group className="mb-3">
             <Form.Label>Type</Form.Label>
             <Form.Select
@@ -44,7 +43,6 @@ const CreateEditMovieModal = ({
               <option value="international">International</option>
             </Form.Select>
           </Form.Group>
-
           <Form.Group className="mb-3">
             <Form.Label>Director</Form.Label>
             <Form.Select
@@ -61,7 +59,6 @@ const CreateEditMovieModal = ({
               ))}
             </Form.Select>
           </Form.Group>
-
           <Form.Group className="mb-3">
             <Form.Label>Poster URL</Form.Label>
             <Form.Control
@@ -73,7 +70,6 @@ const CreateEditMovieModal = ({
               placeholder="https://example.com/poster.jpg"
             />
           </Form.Group>
-
           <Form.Group className="mb-3">
             <Form.Label>Description</Form.Label>
             <Form.Control

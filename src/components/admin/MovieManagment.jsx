@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { Table, Button } from "react-bootstrap";
 import * as movieService from "../../services/movieService";
-
+import { INITIAL_MOVIE_FORM } from "../../constants/formData.consts";
 import DismissableAlert from "../modals/DismissableAlert";
 import CreateEditMovieModal from "../modals/CreateEditMovieModal";
 import DeleteMovieModal from "../modals/DeleteMovieModal";
@@ -9,34 +9,20 @@ import LoadingSpinner from "../common/LoadingSpinner";
 
 const MovieManagement = () => {
   const [movies, setMovies] = useState([]);
-  const [directors, setDirectors] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [editingMovie, setEditingMovie] = useState(null);
   const [loading, setLoading] = useState(false);
-
-  const [formData, setFormData] = useState({
-    title: "",
-    type: "",
-    poster: "",
-    description: "",
-    directorId: "",
-  });
-
+  const [formData, setFormData] = useState(INITIAL_MOVIE_FORM);
   const [alert, setAlert] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [movieToDelete, setMovieToDelete] = useState(null);
-
-  useEffect(() => {
-    loadMovies();
-    loadDirectors();
-  }, []);
 
   const showAlert = (type, message, duration = 4000) => {
     setAlert({ type, message });
     setTimeout(() => setAlert(null), duration);
   };
 
-  const loadMovies = async () => {
+  const loadMovies = useCallback(async () => {
     try {
       setLoading(true);
       const moviesData = await movieService.getAllMovies();
@@ -47,17 +33,11 @@ const MovieManagement = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const loadDirectors = async () => {
-    try {
-      const directorsData = await movieService.getAllDirectors();
-      setDirectors(directorsData);
-    } catch (err) {
-      showAlert("danger", "Failed to load directors");
-      console.error(err);
-    }
-  };
+  useEffect(() => {
+    loadMovies();
+  }, [loadMovies]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -84,24 +64,13 @@ const MovieManagement = () => {
     }
   };
 
-  const resetForm = () => {
-    setFormData({
-      title: "",
-      type: "",
-      poster: "",
-      description: "",
-      directorId: "",
-    });
-  };
+  const resetForm = () => setFormData(INITIAL_MOVIE_FORM);
 
   const handleEdit = (movie) => {
     setEditingMovie(movie);
     setFormData({
-      title: movie.title,
-      type: movie.type,
-      poster: movie.poster,
-      description: movie.description,
-      directorId: movie.directorId.toString(),
+      ...movie,
+      directorId: movie.directorId,
     });
     setShowModal(true);
   };
@@ -113,7 +82,6 @@ const MovieManagement = () => {
 
   const handleDelete = async () => {
     if (!movieToDelete) return;
-
     try {
       await movieService.deleteMovie(movieToDelete.id);
       showAlert("success", "Movie deleted successfully");
@@ -127,23 +95,31 @@ const MovieManagement = () => {
   };
 
   const handleInputChange = (e) => {
-    setFormData({
-      ...formData,
+    setFormData((prev) => ({
+      ...prev,
       [e.target.name]: e.target.value,
-    });
+    }));
   };
 
-  return (
-    <div>
-      <DismissableAlert type={alert?.type} message={alert?.message} />
+  const handleOnHide = () => {
+    setShowModal(false);
+    setEditingMovie(null);
+    resetForm();
+  };
 
+  const directorsList = useMemo(() => {
+    return movies.map((m) => m.director).filter(Boolean);
+  }, [movies]);
+
+  return (
+    <>
+      <DismissableAlert type={alert?.type} message={alert?.message} />
       <div className="d-flex justify-content-between mb-3">
         <h2>Movie Management</h2>
         <Button variant="primary" onClick={() => setShowModal(true)}>
           Add Movie
         </Button>
       </div>
-
       {loading ? (
         <LoadingSpinner />
       ) : (
@@ -186,28 +162,22 @@ const MovieManagement = () => {
           </Table>
         </div>
       )}
-
       <CreateEditMovieModal
         show={showModal}
-        onHide={() => {
-          setShowModal(false);
-          setEditingMovie(null);
-          resetForm();
-        }}
-        onSubmit={handleSubmit}
-        formData={formData}
-        onChange={handleInputChange}
-        directors={directors}
         editingMovie={editingMovie}
+        formData={formData}
+        directors={directorsList}
+        onHide={handleOnHide}
+        onSubmit={handleSubmit}
+        onChange={handleInputChange}
       />
-
       <DeleteMovieModal
         show={showDeleteModal}
         onHide={() => setShowDeleteModal(false)}
         onConfirm={handleDelete}
         movie={movieToDelete}
       />
-    </div>
+    </>
   );
 };
 

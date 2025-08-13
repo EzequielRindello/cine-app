@@ -1,4 +1,4 @@
-import { ENDPOINTS, MOVIE_ERRORS } from "../data/cinema.consts";
+import { ENDPOINTS, MOVIE_ERRORS } from "../constants/cinema.consts";
 
 export const getAllDirectors = async () => {
   const response = await fetch(ENDPOINTS.DIRECTORS);

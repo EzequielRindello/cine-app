@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Button, Card, Col, Row } from "react-bootstrap";
-import { formatFunctionInfo } from "../../services/formatters";
+import { formatFunctionInfo } from "../../helpers/formatters";
 import { useFunctions } from "../../contexts/FunctionsContext";
 import LoadingSpinner from "../common/LoadingSpinner";
 import FunctionModal from "../modals/FunctionModal";
-import { useRole } from "../../hooks/userRole";
+import { useRole } from "../../hooks/useRole";
 
 const MovieDetails = () => {
   const [movieData, setMovieData] = useState(null);
@@ -110,13 +110,11 @@ const MovieDetails = () => {
                 >
                   Go Back
                 </Button>
-
                 {isAdminOrAbove() && (
                   <Button variant="warning" onClick={handleAddFunction}>
                     Add Function
                   </Button>
                 )}
-
                 {isUser() && (
                   <Button variant="primary" onClick={handleReserveClick}>
                     Reserve Tickets
