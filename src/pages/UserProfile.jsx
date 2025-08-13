@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { Button, Container, Alert, Row, Col } from "react-bootstrap";
-import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "../contexts/auth";
 import { useRole } from "../hooks/useRole.js";
 import LoadingSpinner from "../components/common/LoadingSpinner";
 import ProfileCard from "../components/login/ProfileCard.jsx";

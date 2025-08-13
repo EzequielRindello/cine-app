@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Container, Form } from "react-bootstrap";
-import { useFunctions } from "../contexts/FunctionsContext";
+import { useFunctions } from "../contexts/functions";
 import FunctionList from "../components/functions/FunctionList";
 
 const Functions = () => {

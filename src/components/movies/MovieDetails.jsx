@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Button, Card, Col, Row } from "react-bootstrap";
 import { formatFunctionInfo } from "../../helpers/formatters";
-import { useFunctions } from "../../contexts/FunctionsContext";
+import { useFunctions } from "../../contexts/functions";
 import LoadingSpinner from "../common/LoadingSpinner";
 import FunctionModal from "../modals/FunctionModal";
 import { useRole } from "../../hooks/useRole";

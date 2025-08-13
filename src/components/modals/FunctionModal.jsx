@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
-import { useFunctions } from "../../contexts/FunctionsContext";
+import { useFunctions } from "../../contexts/functions";
 import { MODAL_MODES } from "../../constants/cinema.consts";
 import { formatFunctionForForm } from "../../helpers/formatters";
 import SuccessModal from "./SuccessModal";

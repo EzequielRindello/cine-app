@@ -1,7 +1,6 @@
-import { createContext, useContext, useState, useEffect } from "react";
-import * as loginService from "../services/loginService";
-
-const AuthContext = createContext();
+import { useState, useEffect } from "react";
+import { AuthContext } from "./AuthContext";
+import * as loginService from "../../services/loginService";
 
 export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem("token") || "");
@@ -24,8 +23,6 @@ export const AuthProvider = ({ children }) => {
           await loginService.getUserById(userData.id);
         } catch (err) {
           console.error("Token inválido o expirado:", err);
-
-          //if error remove credentials
           localStorage.removeItem("token");
           localStorage.removeItem("user");
           setToken("");
@@ -45,18 +42,11 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     try {
       const res = await loginService.login(email, password);
-
-      setPendingAuth({
-        token: res.token,
-        user: res.user,
-        userId: res.user.id,
-      });
-
+      setPendingAuth({ token: res.token, user: res.user, userId: res.user.id });
       localStorage.setItem("token", res.token);
       setAuthError("");
-
       return { success: true };
-    } catch (err) {
+    } catch {
       setAuthError("Invalid credentials");
       return { success: false };
     }
@@ -65,30 +55,25 @@ export const AuthProvider = ({ children }) => {
   const completeLogin = async () => {
     if (pendingAuth) {
       setToken(pendingAuth.token);
-
       try {
         const userData = await loginService.getUserById(pendingAuth.userId);
         setUser(userData);
-
-        // create the local storage
         localStorage.setItem("user", JSON.stringify(userData));
       } catch (err) {
         console.error("Error fetching user data:", err);
         setUser(pendingAuth.user);
         localStorage.setItem("user", JSON.stringify(pendingAuth.user));
       }
-
       setPendingAuth(null);
     }
   };
 
   const register = async (data) => {
     try {
-      const res = await loginService.register(data);
-      // auto-login after registration
+      await loginService.register(data);
       await login(data.email, data.password);
       return { success: true };
-    } catch (err) {
+    } catch {
       setAuthError("Registration failed");
       return { success: false };
     }
@@ -120,5 +105,3 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
-
-export const useAuth = () => useContext(AuthContext);

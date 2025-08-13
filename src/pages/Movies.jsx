@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Container, Form } from "react-bootstrap";
-import { useMovies } from "../contexts/MoviesContext";
+import { useMovies } from "../contexts/movies";
 import MovieList from "../components/movies/MovieList";
 import ServerError from "../components/common/ServerError.jsx"
 
