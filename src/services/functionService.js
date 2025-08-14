@@ -1,4 +1,8 @@
-import { ENDPOINTS, MOVIE_ORIGIN, FUNTION_ERRORS } from "../constants/cinema.consts";
+import {
+  ENDPOINTS,
+  MOVIE_ORIGIN,
+  FUNTION_ERRORS,
+} from "../constants/cinema.consts";
 import { getAuthHeaders } from "../helpers/httpHelpers";
 
 // API Methods
@@ -14,7 +18,7 @@ export const functionService = {
       const functionsData = await functionsResponse.json();
 
       const nationalMovies = moviesData.filter(
-        (m) => m.type === MOVIE_ORIGIN.NATIONAL 
+        (m) => m.type === MOVIE_ORIGIN.NATIONAL
       );
       const internationalMovies = moviesData.filter(
         (m) => m.type === MOVIE_ORIGIN.INTERNATIONAL
@@ -209,7 +213,13 @@ export const functionService = {
       const response = await fetch(ENDPOINTS.FUNCTION, {
         method: "POST",
         headers: getAuthHeaders(),
-        body: JSON.stringify(newFunction),
+        body: JSON.stringify({
+          movieId: parseInt(movieId),
+          date: new Date(date).toISOString(),
+          time: time.length === 5 ? `${time}:00` : time,
+          price: parseFloat(price),
+          totalCapacity: 50,
+        }),
       });
 
       if (!response.ok) {

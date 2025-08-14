@@ -1,5 +1,5 @@
 import { ENDPOINTS, MOVIE_ERRORS } from "../constants/cinema.consts";
-import { getAuthHeaders } from "../hooks/useHttp";
+import { getAuthHeaders } from "../helpers/httpHelpers";
 
 export const getAllDirectors = async () => {
   const response = await fetch(ENDPOINTS.DIRECTORS);
