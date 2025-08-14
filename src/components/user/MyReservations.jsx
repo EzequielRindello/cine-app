@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Alert, Card, Button } from "react-bootstrap";
 import * as reservationService from "../../services/reservationsService";
 import { canModifyReservation } from "../../helpers/reservationHelpers.js";
-import ReservationModal from "../modals/ReservationModal";
+import ReservationModal from "../modals/reservation/ReservationModal.jsx";
 import DeleteItemModal from "../modals/DeleteItemModal";
 
 const MyReservations = () => {

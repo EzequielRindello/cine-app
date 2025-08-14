@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { Button, Card } from "react-bootstrap";
 import { formatFunctionDateTime } from "../../helpers/formatters";
-import ReservationModal from "../modals/ReservationModal";
-import FunctionModal from "../modals/FunctionModal";
+import ReservationModal from "../modals/reservation/ReservationModal";
+import FunctionModal from "../modals/function/FunctionModal";
 import { useRole } from "../../hooks/useRole";
 
 const FunctionCard = ({ func }) => {

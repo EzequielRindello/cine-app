@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Alert, Modal, Form, Button } from "react-bootstrap";
-import { useAuth } from "../../contexts/auth";
+import { useAuth } from "../../../contexts/auth";
 
 const LoginModal = ({ show, onClose, onRegister }) => {
   const [formData, setFormData] = useState({

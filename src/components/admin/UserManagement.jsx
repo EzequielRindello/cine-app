@@ -3,7 +3,7 @@ import { Table, Button } from "react-bootstrap";
 import * as userService from "../../services/userService";
 import { INITIAL_USER_FORM } from "../../constants/formData.consts";
 import DismissableAlert from "../modals/DismissableAlert";
-import CreateEditUserModal from "../modals/CreateEditUserModal";
+import CreateEditUserModal from "../modals/user/CreateEditUserModal";
 import LoadingSpinner from "../common/LoadingSpinner";
 import DeleteItemModal from "../modals/DeleteItemModal";
 

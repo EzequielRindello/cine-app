@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Modal, Form, Button, Alert } from "react-bootstrap";
-import * as reservationService from "../../services/reservationsService";
-import { renderTicketOptions } from "../../helpers/ticketHelpers.jsx";
+import * as reservationService from "../../../services/reservationsService";
+import { renderTicketOptions } from "../../../helpers/ticketHelpers.jsx";
 
 const ReservationModal = ({
   show,

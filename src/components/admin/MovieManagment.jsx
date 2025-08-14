@@ -3,7 +3,7 @@ import { Table, Button } from "react-bootstrap";
 import * as movieService from "../../services/movieService";
 import { INITIAL_MOVIE_FORM } from "../../constants/formData.consts";
 import DismissableAlert from "../modals/DismissableAlert";
-import CreateEditMovieModal from "../modals/CreateEditMovieModal";
+import CreateEditMovieModal from "../modals/movies/CreateEditMovieModal";
 import DeleteItemModal from "../modals/DeleteItemModal";
 import LoadingSpinner from "../common/LoadingSpinner";
 

@@ -6,7 +6,7 @@ import { useAuth } from "../contexts/auth";
 import LoginFields from "../components/login/LoginFields";
 import LoginActions from "../components/login/LoginActions";
 import LoginAlerts from "../components/login/LoginAlerts";
-import LoginModal from "../components/modals/LoginModal";
+import LoginModal from "../components/modals/auth/LoginModal";
 import SuccessModal from "../components/modals/SuccessModal";
 
 const LoginForm = () => {
