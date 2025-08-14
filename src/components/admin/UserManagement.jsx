@@ -5,7 +5,7 @@ import { INITIAL_USER_FORM } from "../../constants/formData.consts";
 import DismissableAlert from "../modals/DismissableAlert";
 import CreateEditUserModal from "../modals/CreateEditUserModal";
 import LoadingSpinner from "../common/LoadingSpinner";
-import DeleteUserModal from "../modals/DeleteUserModal";
+import DeleteItemModal from "../modals/DeleteItemModal";
 
 const UserManagement = () => {
   const [users, setUsers] = useState([]);
@@ -165,11 +165,11 @@ const UserManagement = () => {
         onChange={handleInputChange}
         editingUser={editingUser}
       />
-      <DeleteUserModal
+      <DeleteItemModal
         show={showDeleteModal}
         onHide={() => setShowDeleteModal(false)}
         onConfirm={handleDelete}
-        user={userToDelete}
+        item={userToDelete ? { ...userToDelete, type: "User" } : null}
       />
     </>
   );

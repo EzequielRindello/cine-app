@@ -1,79 +1,72 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { Button, Card } from "react-bootstrap";
 import { formatFunctionDateTime } from "../../helpers/formatters";
-import FunctionModal from "../modals/FunctionModal";
 import ReservationModal from "../modals/ReservationModal";
+import FunctionModal from "../modals/FunctionModal";
 import { useRole } from "../../hooks/useRole";
 
 const FunctionCard = ({ func }) => {
-  const [showModal, setShowModal] = useState(false);
   const [showReservationModal, setShowReservationModal] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [showManageModal, setShowManageModal] = useState(false);
   const { isAdminOrAbove, isUser } = useRole();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    setIsLoggedIn(token ? true : false);
+    setIsLoggedIn(!!token);
   }, []);
 
   const handleReservationSuccess = (quantity) => {
     func.availableSeats -= quantity;
   };
 
-  const handleManageClick = () => {
-    setShowModal(true);
-  };
-
-  const handleReserveClick = () => {
-    setShowReservationModal(true);
-  };
-
-  const handleClose = () => {
-    setShowModal(false);
-  };
-
-  const handleReservationClose = () => {
-    setShowReservationModal(false);
-  };
-
   return (
     <>
       <Card>
         <Card.Body>
-          <Card.Title>{func.movie.title}</Card.Title>
+          <Card.Title>{func.movie?.title || "Unknown Movie"}</Card.Title>
           <Card.Subtitle className="mb-2 mt-2">
-            {func.movie.directorName} - {formatFunctionDateTime(func)}
+            {func.movie?.directorName || "-"} -{" "}
+            {formatFunctionDateTime(func) || "-"}
           </Card.Subtitle>
-          <Card.Text>Price: ${func.price}</Card.Text>
-          <Card.Text>Available Seats: {func.availableSeats}</Card.Text>
+          <Card.Text>Price: ${func.price || 0}</Card.Text>
+          <Card.Text>Available Seats: {func.availableSeats || 0}</Card.Text>
           {isLoggedIn && isAdminOrAbove() && (
             <Button
               variant="warning"
-              onClick={handleManageClick}
               className="me-2"
+              onClick={() => setShowManageModal(true)}
             >
               Manage Function
             </Button>
           )}
           {isLoggedIn && isUser() && func.availableSeats > 0 && (
-            <Button variant="primary" onClick={handleReserveClick}>
+            <Button
+              variant="primary"
+              onClick={() => setShowReservationModal(true)}
+            >
               Reserve Tickets
             </Button>
           )}
         </Card.Body>
       </Card>
-      <FunctionModal
-        show={showModal}
-        handleClose={handleClose}
-        mode="edit"
-        func={func}
-      />
-      <ReservationModal
-        show={showReservationModal}
-        handleClose={handleReservationClose}
-        func={func}
-        onReservationSuccess={handleReservationSuccess}
-      />
+      {showManageModal && (
+        <FunctionModal
+          show={showManageModal}
+          handleClose={() => setShowManageModal(false)}
+          mode="edit"
+          func={func}
+        />
+      )}
+      {showReservationModal && (
+        <ReservationModal
+          show={showReservationModal}
+          onHide={() => setShowReservationModal(false)}
+          movieFunction={func}
+          reservation={null}
+          onSuccess={handleReservationSuccess}
+        />
+      )}
     </>
   );
 };

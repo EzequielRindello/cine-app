@@ -4,7 +4,7 @@ import { useFunctions } from "../../contexts/functions";
 import { MODAL_MODES } from "../../constants/cinema.consts";
 import { formatFunctionForForm } from "../../helpers/formatters";
 import SuccessModal from "./SuccessModal";
-import DeleteConfirmationModal from "./DeleteConfirmationModal";
+import DeleteItemModal from "../modals/DeleteItemModal";
 
 const FunctionModal = ({
   show,
@@ -98,13 +98,12 @@ const FunctionModal = ({
         handleClose={handleSuccessClose}
         message={successMessage}
       />
-
-      <DeleteConfirmationModal
+      <DeleteItemModal
         show={showDeleteModal}
-        handleClose={handleDeleteCancel}
-        handleConfirm={handleDeleteConfirm}
+        onHide={handleDeleteCancel}
+        onConfirm={handleDeleteConfirm}
+        item={func ? { ...func, type: "Function" } : null}
       />
-
       <Modal show={show} onHide={handleClose}>
         <Form onSubmit={handleSubmit}>
           <Modal.Header closeButton>

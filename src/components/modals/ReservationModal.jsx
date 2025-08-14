@@ -1,28 +1,54 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Modal, Form, Button, Alert } from "react-bootstrap";
 import * as reservationService from "../../services/reservationsService";
 import { renderTicketOptions } from "../../helpers/ticketHelpers.jsx";
 
 const ReservationModal = ({
   show,
-  handleClose,
-  func,
-  onReservationSuccess,
+  onHide,
+  reservation,
+  movieFunction,
+  onSuccess,
 }) => {
-  const [ticketQuantity, setTicketQuantity] = useState(1);
+  const mode = reservation ? "edit" : "create";
+  const currentFunc =
+    mode === "edit" ? reservation?.movieFunction : movieFunction;
+
+  if (!currentFunc) return <></>;
+
+  const [ticketQuantity, setTicketQuantity] = useState(
+    reservation?.ticketQuantity || 1
+  );
   const [loading, setLoading] = useState(false);
   const [responseMessage, setResponseMessage] = useState({
     type: "",
     text: "",
   });
+  const [availableSeats, setAvailableSeats] = useState(
+    mode === "edit"
+      ? (reservation?.movieFunction?.availableSeats || 0) +
+          (reservation?.ticketQuantity || 0)
+      : movieFunction?.availableSeats || 0
+  );
+
+  useEffect(() => {
+    setAvailableSeats(
+      mode === "edit"
+        ? (reservation?.movieFunction?.availableSeats || 0) +
+            (reservation?.ticketQuantity || 0)
+        : movieFunction?.availableSeats || 0
+    );
+    setTicketQuantity(reservation?.ticketQuantity || 1);
+  }, [reservation, movieFunction, mode]);
+
+  const totalAmount = (currentFunc.price * ticketQuantity).toFixed(2);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (ticketQuantity > func.availableSeats) {
+    if (ticketQuantity > availableSeats) {
       setResponseMessage({
         type: "danger",
-        text: `Only ${func.availableSeats} seats available`,
+        text: `Only ${availableSeats} seats available`,
       });
       return;
     }
@@ -31,37 +57,51 @@ const ReservationModal = ({
       setLoading(true);
       setResponseMessage({ type: "", text: "" });
 
-      const reservationData = {
-        movieFunctionId: func.id,
-        ticketQuantity: parseInt(ticketQuantity),
-      };
+      if (mode === "create") {
+        await reservationService.createReservation({
+          movieFunctionId: movieFunction.id,
+          ticketQuantity,
+        });
+        setResponseMessage({
+          type: "success",
+          text: "Reservation created successfully!",
+        });
+      } else {
+        await reservationService.updateReservation(reservation.id, {
+          movieFunctionId: reservation.movieFunction.id,
+          ticketQuantity,
+          reservationDate: reservation.reservationDate,
+          totalAmount: reservation.movieFunction.price * ticketQuantity,
+        });
+        setResponseMessage({
+          type: "success",
+          text: "Reservation updated successfully!",
+        });
+      }
 
-      await reservationService.createReservation(reservationData);
-      setResponseMessage({
-        type: "success",
-        text: "Reservation created successfully!",
-      });
-
-      if (onReservationSuccess) onReservationSuccess(ticketQuantity);
+      if (onSuccess) onSuccess(ticketQuantity);
 
       setTimeout(() => {
-        handleClose();
-        setResponseMessage({ type: "", text: "" });
+        onHide();
         setTicketQuantity(1);
-      }, 2000);
+        setResponseMessage({ type: "", text: "" });
+      }, 1500);
     } catch (err) {
-      setResponseMessage({ type: "danger", text: err.message });
+      setResponseMessage({
+        type: "danger",
+        text: err.message || "Something went wrong",
+      });
     } finally {
       setLoading(false);
     }
   };
 
-  const totalAmount = (func.price * ticketQuantity).toFixed(2);
-
   return (
-    <Modal show={show} onHide={handleClose}>
+    <Modal show={!!show} onHide={onHide} centered>
       <Modal.Header closeButton>
-        <Modal.Title>Reserve Tickets</Modal.Title>
+        <Modal.Title>
+          {mode === "edit" ? "Edit Reservation" : "Reserve Tickets"}
+        </Modal.Title>
       </Modal.Header>
       <Form onSubmit={handleSubmit}>
         <Modal.Body>
@@ -69,28 +109,28 @@ const ReservationModal = ({
             <Alert variant={responseMessage.type}>{responseMessage.text}</Alert>
           )}
           <div className="mb-3">
-            <h5>{func.movie?.title}</h5>
+            <h5>{currentFunc.movie?.title || "Unknown Movie"}</h5>
             <p>
-              <strong>Date:</strong> {new Date(func.date).toLocaleDateString()}
-            </p>
-            <p>
-              <strong>Time:</strong> {func.time}
-            </p>
-            <p>
-              <strong>Available Seats:</strong> {func.availableSeats}
-            </p>
-            <p>
-              <strong>Price per ticket:</strong> ${func.price}
+              <strong>Date:</strong>{" "}
+              {currentFunc.date
+                ? new Date(currentFunc.date).toLocaleDateString()
+                : "-"}{" "}
+              <br />
+              <strong>Time:</strong> {currentFunc.time || "-"} <br />
+              <strong>Available Seats:</strong> {availableSeats} <br />
+              <strong>Price per ticket:</strong> ${currentFunc.price || 0}
             </p>
           </div>
           <Form.Group className="mb-3">
             <Form.Label>Number of Tickets</Form.Label>
             <Form.Select
               value={ticketQuantity}
-              onChange={(e) => setTicketQuantity(e.target.value)}
-              disabled={loading}
+              onChange={(e) => setTicketQuantity(Number(e.target.value))}
+              disabled={loading || availableSeats === 0}
             >
-              {renderTicketOptions(func.availableSeats)}
+              {availableSeats > 0
+                ? renderTicketOptions(availableSeats)
+                : [<option key="0">0</option>]}
             </Form.Select>
           </Form.Group>
           <div className="mb-3">
@@ -98,11 +138,19 @@ const ReservationModal = ({
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose} disabled={loading}>
+          <Button variant="secondary" onClick={onHide} disabled={loading}>
             Cancel
           </Button>
-          <Button variant="primary" type="submit" disabled={loading}>
-            {loading ? "Processing..." : "Confirm Reservation"}
+          <Button
+            variant="primary"
+            type="submit"
+            disabled={loading || availableSeats === 0}
+          >
+            {loading
+              ? "Processing..."
+              : mode === "edit"
+              ? "Update Reservation"
+              : "Confirm Reservation"}
           </Button>
         </Modal.Footer>
       </Form>

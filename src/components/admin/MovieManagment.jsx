@@ -4,7 +4,7 @@ import * as movieService from "../../services/movieService";
 import { INITIAL_MOVIE_FORM } from "../../constants/formData.consts";
 import DismissableAlert from "../modals/DismissableAlert";
 import CreateEditMovieModal from "../modals/CreateEditMovieModal";
-import DeleteMovieModal from "../modals/DeleteMovieModal";
+import DeleteItemModal from "../modals/DeleteItemModal";
 import LoadingSpinner from "../common/LoadingSpinner";
 
 const MovieManagement = () => {
@@ -171,11 +171,11 @@ const MovieManagement = () => {
         onSubmit={handleSubmit}
         onChange={handleInputChange}
       />
-      <DeleteMovieModal
+      <DeleteItemModal
         show={showDeleteModal}
         onHide={() => setShowDeleteModal(false)}
         onConfirm={handleDelete}
-        movie={movieToDelete}
+        item={movieToDelete ? { ...movieToDelete, type: "Movie" } : null}
       />
     </>
   );
