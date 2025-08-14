@@ -1,12 +1,5 @@
 import { ENDPOINTS } from "../constants/cinema.consts";
-
-const getAuthHeaders = () => {
-  const token = localStorage.getItem("token");
-  return {
-    "Content-Type": "application/json",
-    ...(token && { Authorization: `Bearer ${token}` }),
-  };
-};
+import { getAuthHeaders } from "../helpers/httpHelpers";
 
 export const createReservation = async (reservationData) => {
   const response = await fetch(ENDPOINTS.RESERVATIONS, {

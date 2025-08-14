@@ -1,22 +1,13 @@
 import { ENDPOINTS, LOGIN_ERRORS } from "../constants/cinema.consts";
-
-// helpers
-const getAuthHeaders = () => {
-  const token = localStorage.getItem("token");
-  return {
-    "Content-Type": "application/json",
-    ...(token && { Authorization: `Bearer ${token}` }),
-  };
-};
+import { getAuthHeaders, getBasicHeaders } from "../helpers/httpHelpers";
 
 export const login = async (email, password) => {
   const response = await fetch(ENDPOINTS.AUTH_LOGIN, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: getBasicHeaders(),
     body: JSON.stringify({ email, password }),
   });
+
   if (!response.ok) throw new Error(LOGIN_ERRORS.LOGIN_FAILED);
   return await response.json();
 };
@@ -24,11 +15,10 @@ export const login = async (email, password) => {
 export const register = async (data) => {
   const response = await fetch(ENDPOINTS.AUTH_REGISTER, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: getBasicHeaders(),
     body: JSON.stringify(data),
   });
+
   if (!response.ok) throw new Error(LOGIN_ERRORS.REGISTRATION_FAILED);
   return await response.json();
 };
@@ -38,6 +28,7 @@ export const getUserById = async (id) => {
     method: "GET",
     headers: getAuthHeaders(),
   });
+
   if (!response.ok) {
     const error = await response.json();
     throw new Error(error.message);

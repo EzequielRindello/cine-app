@@ -1,19 +1,6 @@
 import { ENDPOINTS } from "../constants/cinema.consts";
-
-// helpers
-const getAuthHeaders = () => {
-  const token = localStorage.getItem("token");
-  return {
-    "Content-Type": "application/json",
-    ...(token && { Authorization: `Bearer ${token}` }),
-  };
-};
-
-const roleMap = {
-  User: 1,
-  CineAdmin: 2,
-  SysAdmin: 3,
-};
+import { getAuthHeaders } from "../helpers/httpHelpers";
+import { mapRoleToId } from "../helpers/roleHelpers";
 
 // User management functions (only SysAdmin)
 export const getAllUsers = async () => {
@@ -29,10 +16,8 @@ export const getAllUsers = async () => {
 };
 
 export const createUser = async (userData) => {
-  const payload = {
-    ...userData,
-    role: typeof userData.role === "string" ? roleMap[userData.role] : userData.role,
-  };
+  const payload = { ...userData, role: mapRoleToId(userData.role) };
+
   const response = await fetch(ENDPOINTS.USERS, {
     method: "POST",
     headers: getAuthHeaders(),
@@ -46,10 +31,8 @@ export const createUser = async (userData) => {
 };
 
 export const updateUser = async (id, userData) => {
-  const payload = {
-    ...userData,
-    role: typeof userData.role === "string" ? roleMap[userData.role] : userData.role,
-  };
+  const payload = { ...userData, role: mapRoleToId(userData.role) };
+
   const response = await fetch(`${ENDPOINTS.USER_BY_ID}/${id}`, {
     method: "PUT",
     headers: getAuthHeaders(),

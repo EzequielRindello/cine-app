@@ -1,13 +1,5 @@
 import { ENDPOINTS, MOVIE_ORIGIN, FUNTION_ERRORS } from "../constants/cinema.consts";
-
-// helper to get token
-const getAuthHeaders = () => {
-  const token = localStorage.getItem("token");
-  return {
-    "Content-Type": "application/json",
-    ...(token && { Authorization: `Bearer ${token}` }),
-  };
-};
+import { getAuthHeaders } from "../helpers/httpHelpers";
 
 // API Methods
 export const functionService = {
@@ -22,7 +14,7 @@ export const functionService = {
       const functionsData = await functionsResponse.json();
 
       const nationalMovies = moviesData.filter(
-        (m) => m.type === MOVIE_ORIGIN.NATIONAL
+        (m) => m.type === MOVIE_ORIGIN.NATIONAL 
       );
       const internationalMovies = moviesData.filter(
         (m) => m.type === MOVIE_ORIGIN.INTERNATIONAL

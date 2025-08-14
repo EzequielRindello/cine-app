@@ -1,4 +1,5 @@
 import { ENDPOINTS, MOVIE_ERRORS } from "../constants/cinema.consts";
+import { getAuthHeaders } from "../hooks/useHttp";
 
 export const getAllDirectors = async () => {
   const response = await fetch(ENDPOINTS.DIRECTORS);
@@ -33,13 +34,9 @@ export const getMovieById = async (id) => {
 };
 
 export const createMovie = async (movieData) => {
-  const token = localStorage.getItem("token");
   const response = await fetch(ENDPOINTS.MOVIES, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
+    headers: getAuthHeaders(),
     body: JSON.stringify(movieData),
   });
 
@@ -51,13 +48,9 @@ export const createMovie = async (movieData) => {
 };
 
 export const updateMovie = async (id, movieData) => {
-  const token = localStorage.getItem("token");
   const response = await fetch(`${ENDPOINTS.MOVIES}/${id}`, {
     method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
+    headers: getAuthHeaders(),
     body: JSON.stringify({ ...movieData, id }),
   });
 
@@ -69,12 +62,9 @@ export const updateMovie = async (id, movieData) => {
 };
 
 export const deleteMovie = async (id) => {
-  const token = localStorage.getItem("token");
   const response = await fetch(`${ENDPOINTS.MOVIES}/${id}`, {
     method: "DELETE",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
+    headers: getAuthHeaders(),
   });
 
   if (!response.ok) {
