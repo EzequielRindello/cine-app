@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
-import { useFunctions } from "../../contexts/FunctionsContext";
-import { MODAL_MODES } from "../../data/cinema.consts";
-import SuccessModal from "./SuccessModal";
-import DeleteConfirmationModal from "./DeleteConfirmationModal";
+import { useFunctions } from "../../../contexts/functions";
+import { MODAL_MODES } from "../../../constants/cinema.consts";
+import { formatFunctionForForm } from "../../../helpers/formatters";
+import SuccessModal from "../SuccessModal";
+import DeleteItemModal from "../DeleteItemModal";
 
 const FunctionModal = ({
   show,
@@ -20,17 +21,12 @@ const FunctionModal = ({
   const [error, setError] = useState(null);
   const today = new Date().toISOString().split("T")[0];
   const [formData, setFormData] = useState(() => {
-  if (mode === MODAL_MODES.EDIT && func) {
-    return {
-      date: func.date,
-      time: func.time,
-      price: func.price,
-    };
-  } else {
-    return { date: "", time: "", price: "" };
-  }
-});
-
+    if (mode === MODAL_MODES.EDIT && func) {
+      return formatFunctionForForm(func);
+    } else {
+      return { date: "", time: "", price: "" };
+    }
+  });
 
   const { addFunction, editFunction, deleteFunction } = useFunctions();
 
@@ -102,13 +98,12 @@ const FunctionModal = ({
         handleClose={handleSuccessClose}
         message={successMessage}
       />
-
-      <DeleteConfirmationModal
+      <DeleteItemModal
         show={showDeleteModal}
-        handleClose={handleDeleteCancel}
-        handleConfirm={handleDeleteConfirm}
+        onHide={handleDeleteCancel}
+        onConfirm={handleDeleteConfirm}
+        item={func ? { ...func, type: "Function" } : null}
       />
-
       <Modal show={show} onHide={handleClose}>
         <Form onSubmit={handleSubmit}>
           <Modal.Header closeButton>
@@ -122,7 +117,9 @@ const FunctionModal = ({
               <Form.Control
                 type="text"
                 value={
-                  mode === MODAL_MODES.ADD ? directorName : func?.movie?.directorName
+                  mode === MODAL_MODES.ADD
+                    ? directorName
+                    : func?.movie?.directorName
                 }
                 disabled
                 className="bg-light text-secondary"

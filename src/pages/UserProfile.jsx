@@ -1,11 +1,16 @@
 import { useNavigate } from "react-router-dom";
-import { Button, Container, Alert } from "react-bootstrap";
-import { useAuth } from "../contexts/AuthContext";
+import { Button, Container, Alert, Row, Col } from "react-bootstrap";
+import { useAuth } from "../contexts/auth";
+import { useRole } from "../hooks/useRole.js";
 import LoadingSpinner from "../components/common/LoadingSpinner";
 import ProfileCard from "../components/login/ProfileCard.jsx";
+import UserManagement from "../components/admin/UserManagement.jsx";
+import MovieManagment from "../components/admin/MovieManagment.jsx";
+import MyReservations from "../components/user/MyReservations.jsx";
 
 const UserProfile = () => {
   const { user, isLoading, logout } = useAuth();
+  const { isSysAdmin, isCineAdmin, isUser, isAdminOrAbove } = useRole();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -33,10 +38,42 @@ const UserProfile = () => {
 
   return (
     <Container className="mt-4">
-      <ProfileCard user={user} />
-      <Button variant="danger m-3" onClick={handleLogout}>
-        logout
-      </Button>
+      <Row>
+        <Col md={4}>
+          <ProfileCard user={user} />
+          <Button variant="danger m-3" onClick={handleLogout}>
+            Logout
+          </Button>
+        </Col>
+        <Col md={8}>
+          {isSysAdmin() && (
+            <>
+              <h3>User Management</h3>
+              <UserManagement />
+            </>
+          )}
+          {isCineAdmin() && (
+            <>
+              <h3>CineAdmin Profile</h3>
+              <Alert className="mt-3" variant="warning">
+                CineAdmin accounts cannot be modified directly. Please contact a
+                SysAdmin for any changes.
+              </Alert>
+            </>
+          )}
+          {isUser() && (
+            <>
+              <h3>My Reservations</h3>
+              <MyReservations />
+            </>
+          )}
+        </Col>
+      </Row>
+      {isAdminOrAbove() && (
+        <div className="my-5">
+          <MovieManagment />
+        </div>
+      )}
     </Container>
   );
 };

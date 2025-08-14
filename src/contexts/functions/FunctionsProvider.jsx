@@ -1,15 +1,6 @@
-import { createContext, useContext, useState } from "react";
-import { functionService } from "../services/functionService";
-
-const FunctionsContext = createContext();
-
-export const useFunctions = () => {
-  const context = useContext(FunctionsContext);
-  if (!context) {
-    throw new Error("useFunctions must be used inside FunctionsProvider");
-  }
-  return context;
-};
+import { useState } from "react";
+import { FunctionsContext } from "./FunctionsContext";
+import { functionService } from "../../services/functionService";
 
 export const FunctionsProvider = ({ children }) => {
   const [functions, setFunctions] = useState([]);
@@ -71,18 +62,18 @@ export const FunctionsProvider = ({ children }) => {
     }
   };
 
-  const value = {
-    functions,
-    fetchFunctions,
-    addFunction,
-    editFunction,
-    deleteFunction,
-    getStats,
-    getMovieFunctions,
-  };
-
   return (
-    <FunctionsContext.Provider value={value}>
+    <FunctionsContext.Provider
+      value={{
+        functions,
+        fetchFunctions,
+        addFunction,
+        editFunction,
+        deleteFunction,
+        getStats,
+        getMovieFunctions,
+      }}
+    >
       {children}
     </FunctionsContext.Provider>
   );

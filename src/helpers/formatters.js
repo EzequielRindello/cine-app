@@ -23,3 +23,13 @@ export const formatFunctionDateTime = (func) => {
 
   return `${formattedDate} ${time}`;
 };
+
+export const formatFunctionForForm = (func) => {
+  return {
+    date: func.date
+      ? new Date(func.date).toISOString().split("T")[0]
+      : "",
+    time: func.time ? func.time.slice(0, 5) : "",
+    price: func.price ?? "",
+  };
+};

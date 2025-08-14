@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Button, Card, Col, Row } from "react-bootstrap";
-import { formatFunctionInfo } from "../../services/formatters";
-import { useFunctions } from "../../contexts/FunctionsContext"; 
+import { formatFunctionInfo } from "../../helpers/formatters";
+import { useFunctions } from "../../contexts/functions";
 import LoadingSpinner from "../common/LoadingSpinner";
-import FunctionModal from "../modals/FunctionModal";
+import FunctionModal from "../modals/function/FunctionModal";
+import { useRole } from "../../hooks/useRole";
 
 const MovieDetails = () => {
   const [movieData, setMovieData] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const { isAdminOrAbove, isUser } = useRole();
   const { id } = useParams();
   const navigate = useNavigate();
   const { getMovieFunctions } = useFunctions();
@@ -39,6 +41,10 @@ const MovieDetails = () => {
 
   const handleCloseModal = () => {
     setShowModal(false);
+  };
+
+  const handleReserveClick = () => {
+    navigate(`/functions`);
   };
 
   if (isLoading) {
@@ -104,9 +110,16 @@ const MovieDetails = () => {
                 >
                   Go Back
                 </Button>
-                <Button variant="danger" onClick={handleAddFunction}>
-                  Add Function
-                </Button>
+                {isAdminOrAbove() && (
+                  <Button variant="warning" onClick={handleAddFunction}>
+                    Add Function
+                  </Button>
+                )}
+                {isUser() && (
+                  <Button variant="primary" onClick={handleReserveClick}>
+                    Reserve Tickets
+                  </Button>
+                )}
               </div>
             </Card.Body>
           </Col>
