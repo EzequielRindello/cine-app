@@ -1,4 +1,8 @@
-import { ENDPOINTS, LOGIN_ERRORS } from "../constants/cinema.consts";
+import {
+  ENDPOINTS,
+  LOGIN_ERRORS,
+  HTTP_METHODS,
+} from "../constants/cinema.consts";
 import {
   getBasicHeaders,
   getAuthHeaders,
@@ -7,10 +11,15 @@ import {
 
 export const login = async (email, password) => {
   try {
-    return await getHttp(ENDPOINTS.AUTH_LOGIN, "POST", getBasicHeaders(), {
-      email,
-      password,
-    });
+    return await getHttp(
+      ENDPOINTS.AUTH_LOGIN,
+      HTTP_METHODS.POST,
+      getBasicHeaders(),
+      {
+        email,
+        password,
+      }
+    );
   } catch {
     throw new Error(LOGIN_ERRORS.LOGIN_FAILED);
   }
@@ -20,7 +29,7 @@ export const register = async (data) => {
   try {
     return await getHttp(
       ENDPOINTS.AUTH_REGISTER,
-      "POST",
+      HTTP_METHODS.POST,
       getBasicHeaders(),
       data
     );
@@ -30,4 +39,4 @@ export const register = async (data) => {
 };
 
 export const getUserById = async (id) =>
-  getHttp(`${ENDPOINTS.AUTH_USER}/${id}`, "GET", getAuthHeaders());
+  getHttp(`${ENDPOINTS.AUTH_USER}/${id}`, HTTP_METHODS.GET, getAuthHeaders());

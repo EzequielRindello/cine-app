@@ -2,14 +2,15 @@ import {
   ENDPOINTS,
   MOVIE_ORIGIN,
   FUNTION_ERRORS,
+  HTTP_METHODS,
 } from "../constants/cinema.consts";
 import { getAuthHeaders, getHttp } from "../helpers/httpHelpers";
 
 export const functionService = {
   async getStats() {
     const [moviesData, functionsData] = await Promise.all([
-      getHttp(ENDPOINTS.MOVIES, "GET", getAuthHeaders()),
-      getHttp(ENDPOINTS.FUNCTION, "GET", getAuthHeaders()),
+      getHttp(ENDPOINTS.MOVIES, HTTP_METHODS.GET, getAuthHeaders()),
+      getHttp(ENDPOINTS.FUNCTION, HTTP_METHODS.GET, getAuthHeaders()),
     ]);
 
     const nationalMovies = moviesData.filter(
@@ -33,8 +34,8 @@ export const functionService = {
 
   async getMovies() {
     const [moviesData, functionsData] = await Promise.all([
-      getHttp(ENDPOINTS.MOVIES, "GET", getAuthHeaders()),
-      getHttp(ENDPOINTS.FUNCTION, "GET", getAuthHeaders()),
+      getHttp(ENDPOINTS.MOVIES, HTTP_METHODS.GET, getAuthHeaders()),
+      getHttp(ENDPOINTS.FUNCTION, HTTP_METHODS.GET, getAuthHeaders()),
     ]);
 
     return moviesData.map((movie) => {
@@ -53,7 +54,7 @@ export const functionService = {
   async getAllFunctions() {
     const functionsData = await getHttp(
       ENDPOINTS.FUNCTION,
-      "GET",
+      HTTP_METHODS.GET,
       getAuthHeaders()
     );
     return functionsData.map((func) => ({
@@ -172,13 +173,18 @@ export const functionService = {
         throw new Error(FUNTION_ERRORS.DIRECTOR_FUNCTION_LIMIT);
       }
 
-      return await getHttp(ENDPOINTS.FUNCTION, "POST", getAuthHeaders(), {
-        movieId: parseInt(movieId),
-        date: new Date(date).toISOString(),
-        time: time.length === 5 ? `${time}:00` : time,
-        price: parseFloat(price),
-        totalCapacity: 50,
-      });
+      return await getHttp(
+        ENDPOINTS.FUNCTION,
+        HTTP_METHODS.POST,
+        getAuthHeaders(),
+        {
+          movieId: parseInt(movieId),
+          date: new Date(date).toISOString(),
+          time: time.length === 5 ? `${time}:00` : time,
+          price: parseFloat(price),
+          totalCapacity: 50,
+        }
+      );
     } catch (error) {
       if (error.message.includes("401")) {
         throw new Error(FUNTION_ERRORS.FUNTIONS_PERMISSION);
@@ -194,7 +200,7 @@ export const functionService = {
     try {
       return await getHttp(
         `${ENDPOINTS.FUNCTION}/${updatedFunction.id}`,
-        "PUT",
+        HTTP_METHODS.PUT,
         getAuthHeaders(),
         {
           id: updatedFunction.id,
@@ -217,7 +223,11 @@ export const functionService = {
 
   async deleteFunction(id) {
     try {
-      await getHttp(`${ENDPOINTS.FUNCTION}/${id}`, "DELETE", getAuthHeaders());
+      await getHttp(
+        `${ENDPOINTS.FUNCTION}/${id}`,
+        HTTP_METHODS.DELETE,
+        getAuthHeaders()
+      );
       return true;
     } catch (error) {
       if (error.message.includes("401")) {

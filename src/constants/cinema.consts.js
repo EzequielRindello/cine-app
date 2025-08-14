@@ -53,3 +53,10 @@ export const MOVIE_ERRORS = {
   MOVIES: "Failed to fetch movies",
   MOVIE: "Failed to fetch movie",
 };
+
+export const HTTP_METHODS = {
+  GET: "GET",
+  POST: "POST",
+  PUT: "PUT",
+  DELETE: "DELETE",
+};
