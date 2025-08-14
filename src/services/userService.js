@@ -1,4 +1,4 @@
-import { ENDPOINTS, HTTP_METHODS } from "../constants/cinema.consts";
+import { ENDPOINTS, HTTP_METHODS,  } from "../constants/cinema.consts";
 import { getAuthHeaders, getHttp } from "../helpers/httpHelpers";
 import { mapRoleToId } from "../helpers/roleHelpers";
 
@@ -20,9 +20,14 @@ export const updateUser = async (id, userData) => {
   );
 };
 
-export const deleteUser = async (id) =>
+export const deleteUser = async (id) => {
+  const currentUser = localStorage.getItem("user");
+  if (currentUser && JSON.parse(currentUser).id === id) {
+    throw new Error("You cannot delete your own account.");
+  }
   getHttp(
     `${ENDPOINTS.USER_BY_ID}/${id}`,
     HTTP_METHODS.DELETE,
     getAuthHeaders()
   );
+};

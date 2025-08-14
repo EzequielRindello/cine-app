@@ -1,11 +1,14 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { Table, Button } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import * as movieService from "../../services/movieService";
-import { INITIAL_MOVIE_FORM } from "../../constants/formData.consts";
+import {
+  INITIAL_MOVIE_FORM,
+  MOVIE_COLUMNS,
+} from "../../constants/formData.consts";
 import DismissableAlert from "../modals/DismissableAlert";
 import CreateEditMovieModal from "../modals/movies/CreateEditMovieModal";
 import DeleteItemModal from "../modals/DeleteItemModal";
-import LoadingSpinner from "../common/LoadingSpinner";
+import DataTable from "../admin/DataTable";
 
 const MovieManagement = () => {
   const [movies, setMovies] = useState([]);
@@ -120,48 +123,14 @@ const MovieManagement = () => {
           Add Movie
         </Button>
       </div>
-      {loading ? (
-        <LoadingSpinner />
-      ) : (
-        <div className="table-responsive">
-          <Table striped bordered hover className="custom-table">
-            <thead>
-              <tr>
-                <th>Title</th>
-                <th>Type</th>
-                <th>Director</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {movies.map((movie) => (
-                <tr key={movie.id}>
-                  <td>{movie.title}</td>
-                  <td>{movie.type}</td>
-                  <td>{movie.director?.name || "N/A"}</td>
-                  <td>
-                    <Button
-                      variant="warning"
-                      size="sm"
-                      className="me-2"
-                      onClick={() => handleEdit(movie)}
-                    >
-                      Edit
-                    </Button>
-                    <Button
-                      variant="danger"
-                      size="sm"
-                      onClick={() => confirmDelete(movie)}
-                    >
-                      Delete
-                    </Button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-        </div>
-      )}
+      <DataTable
+        data={movies}
+        columns={MOVIE_COLUMNS}
+        loading={loading}
+        onEdit={handleEdit}
+        onDelete={confirmDelete}
+        emptyMessage="No movies found"
+      />
       <CreateEditMovieModal
         show={showModal}
         editingMovie={editingMovie}

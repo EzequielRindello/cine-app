@@ -1,11 +1,14 @@
 import { useState, useEffect, useCallback } from "react";
-import { Table, Button } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import * as userService from "../../services/userService";
-import { INITIAL_USER_FORM } from "../../constants/formData.consts";
+import {
+  INITIAL_USER_FORM,
+  USER_COLUMNS,
+} from "../../constants/formData.consts";
 import DismissableAlert from "../modals/DismissableAlert";
 import CreateEditUserModal from "../modals/user/CreateEditUserModal";
-import LoadingSpinner from "../common/LoadingSpinner";
 import DeleteItemModal from "../modals/DeleteItemModal";
+import DataTable from "../admin/DataTable";
 
 const UserManagement = () => {
   const [users, setUsers] = useState([]);
@@ -113,50 +116,14 @@ const UserManagement = () => {
           Create User
         </Button>
       </div>
-      {loading ? (
-        <LoadingSpinner />
-      ) : (
-        <div className="table-responsive">
-          <Table striped bordered hover className="custom-table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Role</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {users.map((user) => (
-                <tr key={user.id}>
-                  <td>
-                    {user.firstName} {user.lastName}
-                  </td>
-                  <td>{user.email}</td>
-                  <td>{user.role}</td>
-                  <td>
-                    <Button
-                      variant="warning"
-                      size="sm"
-                      className="me-2"
-                      onClick={() => handleEdit(user)}
-                    >
-                      Edit
-                    </Button>
-                    <Button
-                      variant="danger"
-                      size="sm"
-                      onClick={() => confirmDelete(user)}
-                    >
-                      Delete
-                    </Button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-        </div>
-      )}
+      <DataTable
+        data={users}
+        columns={USER_COLUMNS}
+        loading={loading}
+        onEdit={handleEdit}
+        onDelete={confirmDelete}
+        emptyMessage="No users found"
+      />
       <CreateEditUserModal
         show={showModal}
         onHide={handleOnHide}
