@@ -1,60 +1,19 @@
 import { ENDPOINTS } from "../constants/cinema.consts";
-import { getAuthHeaders } from "../helpers/httpHelpers";
+import { getAuthHeaders, getHttp } from "../helpers/httpHelpers";
 
-export const createReservation = async (reservationData) => {
-  const response = await fetch(ENDPOINTS.RESERVATIONS, {
-    method: "POST",
-    headers: getAuthHeaders(),
-    body: JSON.stringify(reservationData),
-  });
+export const createReservation = async (reservationData) =>
+  getHttp(ENDPOINTS.RESERVATIONS, "POST", getAuthHeaders(), reservationData);
 
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.message);
-  }
+export const getMyReservations = async () =>
+  getHttp(ENDPOINTS.MY_RESERVATIONS, "GET", getAuthHeaders());
 
-  return await response.json();
-};
+export const updateReservation = async (id, reservationData) =>
+  getHttp(
+    `${ENDPOINTS.RESERVATIONS}/${id}`,
+    "PUT",
+    getAuthHeaders(),
+    reservationData
+  );
 
-export const getMyReservations = async () => {
-  const response = await fetch(ENDPOINTS.MY_RESERVATIONS, {
-    method: "GET",
-    headers: getAuthHeaders(),
-  });
-
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.message);
-  }
-
-  return await response.json();
-};
-
-export const updateReservation = async (id, reservationData) => {
-  const response = await fetch(`${ENDPOINTS.RESERVATIONS}/${id}`, {
-    method: "PUT",
-    headers: getAuthHeaders(),
-    body: JSON.stringify(reservationData),
-  });
-
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.message);
-  }
-
-  return await response.json();
-};
-
-export const cancelReservation = async (id) => {
-  const response = await fetch(`${ENDPOINTS.RESERVATIONS}/${id}`, {
-    method: "DELETE",
-    headers: getAuthHeaders(),
-  });
-
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.message);
-  }
-
-  return await response.json();
-};
+export const cancelReservation = async (id) =>
+  getHttp(`${ENDPOINTS.RESERVATIONS}/${id}`, "DELETE", getAuthHeaders());

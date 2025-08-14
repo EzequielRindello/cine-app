@@ -40,6 +40,7 @@ export const FUNTION_ERRORS = {
   FUNCTION_NOT_FOUND: "Function not found.",
   FUNTIONS_PERMISSION: "You don't have permission to perform this action.",
   ERROR_FUNCTION: "Error, please contact an administrator.",
+  MOVIE_NOT_FOUND: "Movie not found.",
 };
 
 export const LOGIN_ERRORS = {

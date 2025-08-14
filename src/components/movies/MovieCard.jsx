@@ -18,7 +18,7 @@ const MovieCard = ({ movie }) => {
       />
       <Card.Body>
         <Card.Title>{movie.title}</Card.Title>
-        <Card.Subtitle className="mb-2 text-muted">
+        <Card.Subtitle className="mb-2">
           {movie.directorName} ({movie.nationality})
         </Card.Subtitle>
         <Card.Text>
